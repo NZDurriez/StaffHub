@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ban Appeal Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e1e;
+      color: white;
+      margin: 0;
+      padding: 2rem;
+      overflow-y: scroll; /* Keep scrollability */
+      scrollbar-width: none; /* Firefox */
+    }
+    body::-webkit-scrollbar {
+      display: none; /* Chrome, Safari */
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #333;
+      padding: 2rem;
+      border-radius: 12px;
+    }
+
+    input,
+    textarea,
+    select,
+    button {
+      width: 100%;
+      padding: 0.6rem;
+      margin: 0.5rem 0 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #555;
+      color: white;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #666;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #888;
+    }
+
+    .output-container {
+      margin-top: 2rem;
+      background: #222;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: monospace;
+      background-color: #111;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    pre::-webkit-scrollbar {
+      display: none;
+    }
+
+    .date-wrapper {
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
+
+    .date-wrapper label,
+    .date-wrapper input[type="date"] {
+      display: block;
+      width: 100%;
+      padding: 0.3rem 0;
+    }
+
+    input[type="date"] {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <center><h1>Ban Appeal Generator</h1></center>
+    <form id="qp-form">
+      <label for="ingame-name">Ingame Name:</label>
+      <input type="text" id="ingame-name" name="ingame-name" />
+
+      <label for="discord">Discord:</label>
+      <input type="text" id="discord" name="discord" />
+
+      <div class="date-wrapper">
+        <label for="appeal-date">Date of Appeal:</label>
+        <input type="date" id="appeal-date" name="appeal-date" />
+      </div>
+
+      <label for="ban-id">Ban ID & Reason:</label>
+      <input type="text" id="ban-id" name="ban-id" />
+
+      <label for="ticket-id">Ticket ID:</label>
+      <input type="text" id="ticket-id" name="ticket-id" />
+
+      <label for="outcome">Outcome:</label>
+      <select id="outcome" name="outcome">
+        <option value="" disabled selected hidden>-- Select an option --</option>
+        <option value="Appeal Successful">Appeal Successful</option>
+        <option value="Appeal Denied">Appeal Denied</option>
+      </select>
+
+      <label for="staff-member">Staff Member:</label>
+      <select id="staff-member" name="staff-member">
+        <option value="" disabled selected hidden>-- Select a staff member --</option>
+      </select>
+
+      <label for="notes">Notes:</label>
+      <textarea id="notes" name="notes"></textarea>
+
+      <label for="logged-tx">Logged in TX if successful:</label>
+      <select id="logged-tx" name="logged-tx">
+        <option value="" disabled selected hidden>-- Select an option --</option>
+        <option value="Yes">Yes</option>
+        <option value="N/A">N/A</option>
+      </select>
+
+      <button type="submit">Generate</button>
+    </form>
+
+    <div id="output-container" class="output-container hidden">
+      <h2>Generated Output</h2>
+      <pre id="output"></pre>
+      <button id="copy-btn">📋 Copy to Clipboard</button>
+    </div>
+  </div>
+
+  <script>
+    // Make clicking the date-wrapper focus the date input
+    document.addEventListener('DOMContentLoaded', () => {
+      const dateWrapper = document.querySelector('.date-wrapper');
+      const dateInput = document.getElementById('appeal-date');
+
+      dateWrapper.addEventListener('click', () => {
+        dateInput.showPicker?.() || dateInput.focus();
+      });
+
+      // Populate staff dropdown (if staff.json exists)
+      fetch('https://nzdurriez.github.io/SharedData/staff.json')
+        .then(response => response.json())
+        .then(data => {
+          const staffDropdown = document.getElementById('staff-member');
+          data.forEach(entry => {
+            const option = document.createElement('option');
+            option.value = entry.name;
+            option.textContent = entry.name;
+            staffDropdown.appendChild(option);
+          });
+        })
+        .catch(() => {}); // Ignore if file doesn't exist
+    });
+  </script>
+
+  <!-- Keep your external script file -->
+  <script src="script.js"></script>
+</body>
+</html>
+
