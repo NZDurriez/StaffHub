@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidence Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2 class="title">Evidence Generator</h2>
+
+        <div class="content-wrapper">
+            <!-- Form Section -->
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="case">Case:</label>
+                    <input type="text" id="case">
+                </div>
+
+                <div class="form-group">
+                    <label for="platform">Platform:</label>
+                    <select id="platform">
+                        <option value="FPD">FPD</option>
+                        <option value="Discord">Discord</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="discord">Discord ID:</label>
+                    <input type="text" id="discord" placeholder="Enter ID (Numbers Only)">
+                </div>
+
+                <div class="form-group">
+                    <label for="background">Background:</label>
+                    <textarea id="background"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="evidence">Evidence:</label>
+                    <textarea id="evidence"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="finalRes">Final Res:</label>
+                    <textarea id="finalRes"></textarea>
+                </div>
+
+                <div class="form-group id-group">
+                    <label for="idType">ID Type:</label>
+                    <select id="idType">
+                        <option value="Ban ID">Ban ID</option>
+                        <option value="Warn ID">Warn ID</option>
+                        <option value="Kick ID">Kick ID</option>
+                    </select>
+                    <input type="text" id="idValue" placeholder="Enter ID">
+                </div>
+
+                <!-- <button id="generateBtn">Generate</button> -->
+            </div>
+
+            <!-- Output Section -->
+            <div class="output-container">
+                <pre id="output" class="output"></pre>
+                <button id="copyBtn" class="copy-btn">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
