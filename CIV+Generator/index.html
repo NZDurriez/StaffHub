@@ -202,7 +202,7 @@
     const staffMemberField = document.getElementById('staffMember');
     const logOutput = document.getElementById('logOutput');
 
-    fetch('https://nzdurriez.github.io/SharedData/staff.json')
+    fetch('https://nzdurriez.github.io/StaffHub/StaffList/staff.json')
       .then(response => response.json())
       .then(data => {
         data.forEach(staff => {
