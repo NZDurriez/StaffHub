@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3SP Template Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2 class="title">3SP Template Generator</h2>
+
+    <div class="form-group">
+      <label>Discord ID:</label>
+      <input
+        type="text"
+        id="discordID"
+        placeholder="Enter Discord ID"
+        maxlength="20"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Summary of Staff Interactions:</label>
+      <textarea
+        id="interactions"
+        placeholder="Paste interaction history here"
+      ></textarea>
+    </div>
+
+    <div class="tally-box">
+      <div class="tally-item tally-kick">Kicks: <span id="kickCount">0</span></div>
+      <div class="tally-item tally-warn">Warns: <span id="warnCount">0</span></div>
+      <div class="tally-item tally-ban">Bans: <span id="banCount">0</span></div>
+    </div>
+
+    <div class="form-group">
+      <label>Staff Member:</label>
+      <select id="staffMember">
+        <option value="">Loading staff...</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Your Role:</label>
+      <select id="staffRole" disabled>
+        <option value="">Select a staff member first</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Discord Nitro:</label>
+      <select id="discordNitro">
+        <option value="yes">I have Discord Nitro</option>
+        <option value="no">I do not have Discord Nitro</option>
+      </select>
+    </div>
+
+    <button id="generate3SP">Generate</button>
+    <div id="boxCount"></div>
+
+    <!-- Nitro users see this single box -->
+    <div id="fullOutputContainer" class="output-box" style="display: none;">
+      <p id="outputFull3SP" class="output"></p>
+    </div>
+
+    <!-- Dynamic boxes for non-Nitro users -->
+    <div id="shortOutputsContainer"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
