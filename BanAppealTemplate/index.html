@@ -157,7 +157,7 @@
       });
 
       // Populate staff dropdown (if staff.json exists)
-      fetch('https://nzdurriez.github.io/SharedData/staff.json')
+      fetch('https://nzdurriez.github.io/StaffHub/StaffList/staff.json')
         .then(response => response.json())
         .then(data => {
           const staffDropdown = document.getElementById('staff-member');
@@ -176,4 +176,5 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
