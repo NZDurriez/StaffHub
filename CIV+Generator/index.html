@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Civ+ Acceptance Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="hub-icon.svg" type="image/svg+xml">
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+    .section {
+      background-color: #2a2a2a;
+      padding: 20px;
+      border-radius: 10px;
+      box-sizing: border-box;
+    }
+    h2 {
+      color: orange;
+      margin-top: 0;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+    select, input[type="text"], input[type="date"], textarea, button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: none;
+      background-color: #444;
+      color: white;
+      box-sizing: border-box;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+    button {
+      background-color: #555;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #666;
+    }
+    .toggle-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .toggle-buttons button {
+      flex: 1;
+      padding: 12px;
+      font-weight: bold;
+      border-radius: 6px;
+    }
+    .toggle-buttons .active {
+      color: white;
+    }
+    #acceptBtn.active {
+      background-color: green;
+    }
+    #denyBtn.active {
+      background-color: red;
+    }
+    .textarea-container {
+      position: relative;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+    textarea {
+      background-color: #1e1e1e;
+      color: white;
+      padding: 15px;
+      font-size: 15px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      box-sizing: border-box;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    textarea::-webkit-scrollbar {
+      display: none;
+    }
+    #output {
+      height: 400px;
+    }
+    #logOutput {
+      height: 200px;
+    }
+    .copied-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: auto;
+      width: 100%;
+      max-width: 200px;
+      display: none;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .copied-icon.show {
+      display: block;
+    }
+    @media (max-width: 900px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-grid">
+    <div class="section">
+      <h2>CIV+ Accept/Deny Generator</h2>
+      <div class="toggle-buttons">
+        <button id="acceptBtn" class="active" onclick="setMode('accept')">Accept</button>
+        <button id="denyBtn" onclick="setMode('deny')">Deny</button>
+      </div>
+
+      <label for="discordId">Discord ID:</label>
+      <input type="text" id="discordId" placeholder="123456789012345678" />
+
+      <label for="nameSelect">Staff Member:</label>
+      <select id="nameSelect"></select>
+
+      <input type="hidden" id="staffRole" />
+
+      <button onclick="generate()">Generate Message</button>
+
+      <div class="textarea-container">
+        <textarea id="output" readonly onclick="copyToClipboard()" placeholder="Generated acceptance or denial message will appear here..."></textarea>
+        <img src="copied-stamp.png" alt="Copied!" class="copied-icon" id="copiedIcon" />
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>CIV+ Apps Logging</h2>
+
+      <label for="ingameName">Ingame Name:</label>
+      <input type="text" id="ingameName" placeholder="Player's Name" />
+
+      <label for="discordTag">Discord ID:</label>
+      <input type="text" id="discordTag" readonly />
+
+      <label for="appDate">Date of Application:</label>
+      <input type="date" id="appDate" />
+
+      <label for="ticketId">Ticket ID:</label>
+      <input type="text" id="ticketId" placeholder="e.g. 22489" />
+
+      <label for="outcome">Outcome:</label>
+      <input type="text" id="outcome" readonly />
+
+      <label for="staffMember">Staff Member:</label>
+      <input type="text" id="staffMember" readonly />
+
+      <label for="notes">Notes:</label>
+      <textarea id="notes" rows="2" placeholder="Optional notes..."></textarea>
+
+      <label for="loggedTx">Logged in TX if successful:</label>
+      <select id="loggedTx">
+        <option value="">Select...</option>
+        <option value="Yes">Yes</option>
+        <option value="N/A">N/A</option>
+      </select>
+
+      <div class="textarea-container">
+        <button onclick="generateLogEntry()">Generate Log Entry</button>
+        <textarea id="logOutput" readonly onclick="copyLogToClipboard()" placeholder="Generated log entry will appear here..."></textarea>
+        <img src="copied-stamp.png" alt="Copied!" class="copied-icon" id="copiedIconLog" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let mode = "accept";
+    const nameSelect = document.getElementById('nameSelect');
+    const staffRole = document.getElementById('staffRole');
+    const discordTag = document.getElementById('discordTag');
+    const appDate = document.getElementById('appDate');
+    const outcomeField = document.getElementById('outcome');
+    const staffMemberField = document.getElementById('staffMember');
+    const logOutput = document.getElementById('logOutput');
+
+    fetch('https://nzdurriez.github.io/SharedData/staff.json')
+      .then(response => response.json())
+      .then(data => {
+        data.forEach(staff => {
+          const nameOption = document.createElement('option');
+          nameOption.value = staff.name;
+          nameOption.textContent = staff.name;
+          nameSelect.appendChild(nameOption);
+        });
+
+        nameSelect.addEventListener('change', () => {
+          const selected = data.find(staff => staff.name === nameSelect.value);
+          if (selected) {
+            staffRole.value = selected.role;
+            staffMemberField.value = selected.name;
+          }
+        });
+      });
+
+    function setMode(newMode) {
+      mode = newMode;
+      document.getElementById('acceptBtn').classList.toggle('active', mode === 'accept');
+      document.getElementById('denyBtn').classList.toggle('active', mode === 'deny');
+    }
+
+    function getOrdinalSuffix(day) {
+      if (day > 3 && day < 21) return 'th';
+      switch (day % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+      }
+    }
+
+    function formatDateOrdinal(dateStr) {
+      const date = new Date(dateStr);
+      const day = date.getDate();
+      const suffix = getOrdinalSuffix(day);
+      const month = date.toLocaleString('en-NZ', { month: 'long' });
+      const year = date.getFullYear();
+      return `${day}${suffix} ${month} ${year}`;
+    }
+
+    function generate() {
+      const discordId = document.getElementById('discordId').value.trim();
+      const name = nameSelect.value;
+      const role = staffRole.value;
+
+      const notesField = document.getElementById('notes');
+
+      const today = new Date();
+      let futureDate = new Date(today);
+      futureDate.setMonth(futureDate.getMonth() + 1);
+      const formattedDate = formatDateOrdinal(futureDate.toISOString());
+
+      discordTag.value = `<@${discordId}>`;
+      outcomeField.value = mode === 'accept' ? 'Accepted' : 'Denied';
+
+      if (mode === 'deny') {
+        notesField.value = `Player eligible to re-apply for CIV+ from ${formattedDate}`;
+      }
+
+      const message = mode === "accept"
+        ? `Kia Ora, <@${discordId}>
+
+You have been accepted as a CIV+,
+Your role as a civilian remains the same, as of now, you have access to more items which you can utilize in your RP, these include things such as the 'super' category in vMenu, firearms, planes, music commands, and creating crowds
+Just because you have access to the new weapons, it doesn't mean you need to use them! We need to increase the amount of FRNZ/Ambulance calls are getting.
+
+If you're a member of CIV+, the staff team have recognized your ability to create quality civilian RP. 
+This role allows you to have more freedom when creating 111 calls/scenes, with access to many new weapons, the /music and /crowd command, as well as new vehicles from the 'super' category, and the addition of planes!
+
+**[SEE HERE FOR AVIATION INFORMATION:](https://discord.com/channels/815563382211739670/1071675237663506452/1103773666963099659)**
+
+In addition to the above, you are able to request specialist civ scenes from the civilian guidelines (Section 6.2.4).
+
+Your role also means you need to help any other civilians who are asking questions, or needing help setting up scenes, QP/QVRs etc. 
+
+While you hold this role, you are held to a higher standard for Civilian RP. Staff members are able to give you "Strikes" for breaches of the civilian guidelines, 3 Strikes and your CIV+ role will be removed immediately. If you are issued a strike, you will be notified via a Discord Ticket.  
+
+Any questions please let me know.
+
+Cheers,  
+${name}  
+${role}`
+        : `Kia Ora, <@${discordId}>
+
+Thank you for applying for CIV+, unfortunately I do not believe you are fit for the CIV+ role at this stage. 
+Please do not be disheartened and continue to show staff what you are capable of. 
+
+You are eligible to re-apply for CIV+ from ${formattedDate}
+
+Kind Regards,  
+${name}  
+${role}`;
+
+      document.getElementById('output').value = message;
+      document.getElementById('copiedIcon').classList.remove('show');
+    }
+
+    function generateLogEntry() {
+      const discordId = document.getElementById('discordId').value.trim();
+      const name = nameSelect.value;
+      const ingameName = document.getElementById('ingameName').value.trim();
+      const ticketId = document.getElementById('ticketId').value.trim();
+      const notesField = document.getElementById('notes');
+      const loggedTx = document.getElementById('loggedTx').value;
+      const dateValue = appDate.value ? formatDateOrdinal(appDate.value) : 'Not set';
+
+      if (!ingameName || !ticketId) {
+        alert("Please enter both an Ingame Name and Ticket ID before generating the log.");
+        return;
+      }
+
+      const appLog = `Ingame Name: ${ingameName}
+Discord: <@${discordId}>
+Date of Application: ${dateValue}
+TicketID: ${ticketId}
+Outcome: ${mode === 'accept' ? 'Accepted' : 'Denied'}
+Staff Member: ${name}
+Notes: ${notesField.value}
+Logged in TX if successful: ${mode === 'deny' ? 'N/A' : (loggedTx || '...')}`;
+
+      logOutput.value = appLog;
+      document.getElementById('copiedIconLog').classList.remove('show');
+    }
+
+    function copyToClipboard() {
+      const output = document.getElementById('output');
+      navigator.clipboard.writeText(output.value).then(() => {
+        document.getElementById('copiedIcon').classList.add('show');
+      });
+    }
+
+    function copyLogToClipboard() {
+      const output = document.getElementById('logOutput');
+      navigator.clipboard.writeText(output.value).then(() => {
+        document.getElementById('copiedIconLog').classList.add('show');
+      });
+    }
+  </script>
+</body>
+</html>
