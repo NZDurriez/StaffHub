@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    // Immediately try to send them to the SOP page
+    window.location.href = "https://staff.bhrp.nz/index.php?page=policies";
+
+    // If the login system wipes the query and leaves you on plain index.php,
+    // auto-correct it after 3 seconds
+    setTimeout(() => {
+      if (window.location.hostname === "staff.bhrp.nz" &&
+          window.location.pathname === "/index.php" &&
+          window.location.search === "") {
+        window.location.href = "https://staff.bhrp.nz/index.php?page=policies";
+      }
+    }, 3000);
+  </script>
+</head>
+<body>
+  Redirecting to Staff SOP… please wait.
+</body>
+</html>

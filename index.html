@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Staff Tool Hub</title>
+  <link rel="icon" type="image/svg+xml" href="hub-icon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: white;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 280px;
+      background-color: #2a2a2a;
+      padding: 30px 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sidebar h1 {
+      color: orange;
+      margin-bottom: 25px;
+      font-size: 22px;
+    }
+
+    .sidebar h2 {
+      font-size: 16px;
+      color: #ccc;
+      margin: 25px 0 10px;
+      border-top: 1px solid #444;
+      padding-top: 10px;
+    }
+
+    .link-button {
+      background-color: #444;
+      color: white;
+      padding: 12px 15px;
+      margin: 6px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .link-button:hover {
+      background-color: #666;
+    }
+
+    .external {
+      background-color: #374151;
+    }
+
+    .external:hover {
+      background-color: #4b5563;
+    }
+
+    .link-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .link-label svg {
+      width: 20px;
+      height: 20px;
+      stroke: white;
+    }
+
+    .iframes {
+      flex-grow: 1;
+      width: 100%;
+      height: 100vh;
+      position: relative;
+    }
+
+    .tool-frame {
+      position: absolute;
+      border: none;
+      width: 100%;
+      height: 100%;
+      display: none;
+      overflow: auto;
+      scrollbar-width: none;
+    }
+
+    .tool-frame::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tool-frame.active {
+      display: block;
+    }
+
+    .refresh-icon-wrapper {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .refresh-icon {
+      width: 30px;
+      height: 30px;
+      background-color: #28a745;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.4s ease;
+      position: relative;
+    }
+
+    .refresh-icon:hover {
+      background-color: #2ecc71;
+    }
+
+    .refresh-icon::after {
+      content: "Click to Refresh Single Page\AHold to Refresh All Pages";
+      white-space: pre-line;
+      position: absolute;
+      bottom: 40px;
+      right: -20px;
+      background-color: #333;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      width: max-content;
+      max-width: 180px;
+      text-align: center;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .refresh-icon:hover::after {
+      opacity: 1;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <center></center><h1>Staff Tool Hub</h1></center>
+	
+	<!-- Internal Tools -->
+    <button class="link-button" onclick="showTool('tool-evidence')">
+      <span class="link-label">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h4m-4-8h6m4 12H5a2 2 0 01-2-2V5a2 2 0 012-2h5l2 2h7a2 2 0 012 2v12a2 2 0 01-2 2z" />
+        </svg>
+        Evidence Form
+      </span>
+    </button>
+
+    <button class="link-button" onclick="showTool('tool-ban')">
+      <span class="link-label">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
+        </svg>
+        Ban Appeal Template
+      </span>
+    </button>
+
+    <button class="link-button" onclick="showTool('tool-3sp')">
+      <span class="link-label">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33" />
+        </svg>
+        3SP Ticket Template
+      </span>
+    </button>
+
+    <button class="link-button" onclick="showTool('tool-civ')">
+      <span class="link-label">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 7v3m0 0v3m0-3h3m-3 0h-3M9 10a3 3 0 100-6 3 3 0 000 6zM3 20v-.11a6.375 6.375 0 0112.75 0V20a12.318 12.318 0 01-6.375 1.5A12.318 12.318 0 013 20z" />
+        </svg>
+        CIV+ Accept/Deny
+      </span>
+    </button>
+
+    <button class="link-button" onclick="showTool('tool-punishment')">
+      <span class="link-label">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
+        </svg>
+        Punishment Guidelines
+      </span>
+    </button>
+
+    <button class="link-button" onclick="showTool('tool-commands')">
+      <span class="link-label">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+        </svg>
+        Commands
+      </span>
+    </button>
+
+    <!-- External Tools -->
+    <h2>External Tools</h2>
+
+    <button class="link-button external" onclick="window.open('https://tx.bhrp.nz/', '_blank')">
+      <span class="link-label">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 17.25v-.228a4.5 4.5 0 0 0-.12-1.03l-2.268-9.64a3.375 3.375 0 0 0-3.285-2.602H7.923a3.375 3.375 0 0 0-3.285 2.602l-2.268 9.64a4.5 4.5 0 0 0-.12 1.03v.228m19.5 0a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3m19.5 0a3 3 0 0 0-3-3H5.25a3 3 0 0 0-3 3m16.5 0h.008v.008h-.008v-.008Zm-3 0h.008v.008h-.008v-.008Z" />
+        </svg>
+        TXAdmin Panel
+      </span> ↗
+    </button>
+
+    <button class="link-button external" onclick="window.open('https://docs.google.com/spreadsheets/d/1GWJWGaOomAAzSH5B8wvqd0k7g0yfIpdrS0RzSYjzweQ/edit?usp=sharing', '_blank')">
+      <span class="link-label">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+        </svg>
+        3SP Tracking Portal
+      </span> ↗
+    </button>
+
+    <button class="link-button external" onclick="window.open('https://www.beehiverp.com/topic/1949-fivepd-rules/#comment-3383', '_blank')">
+      <span class="link-label">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
+        </svg>
+        Server Rules
+      </span> ↗
+    </button>
+
+    <button class="link-button external" onclick="window.open('https://dashboard.ticketsbot.cloud/manage/815563382211739670/transcripts', '_blank')">
+      <span class="link-label">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" />
+        </svg>
+        Discord Ticket Logs
+      </span> ↗
+    </button>
+
+    <button class="link-button external" onclick="window.open('sop-redirect.html', '_blank')">
+  <span class="link-label">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h6m-6 4h10M4 6h16a1 1 0 011 1v14a1 1 0 01-1 1H4a1 1 0 01-1-1V7a1 1 0 011-1z" />
+    </svg>
+    Staff SOPs
+  	</span> ↗
+	</button>
+  </div>
+
+  <div class="iframes">
+    <iframe id="tool-evidence" class="tool-frame" src="https://nzdurriez.github.io/EvidenceGenerator/"></iframe>
+    <iframe id="tool-ban" class="tool-frame" src="https://nzdurriez.github.io/BanAppealTemplate/"></iframe>
+    <iframe id="tool-3sp" class="tool-frame" src="https://nzdurriez.github.io/3SP-Template-Auto/"></iframe>
+    <iframe id="tool-civ" class="tool-frame" src="https://nzdurriez.github.io/CIV-Acceptance/"></iframe>
+    <iframe id="tool-punishment" class="tool-frame" src="https://nzdurriez.github.io/PunishmentGuidelines/staff/"></iframe>
+    <iframe id="tool-commands" class="tool-frame" src="https://nzdurriez.github.io/StaffQuickAccess/commands.html"></iframe>
+
+    <div class="refresh-icon-wrapper">
+      <div class="refresh-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let refreshTimeout;
+    let refreshAllTriggered = false;
+
+    function showTool(id) {
+      document.querySelectorAll('.tool-frame').forEach(el => el.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function refreshCurrentFrame(button) {
+      const currentFrame = document.querySelector('.tool-frame.active');
+      if (currentFrame) {
+        button.classList.add('spin');
+        currentFrame.src = currentFrame.src;
+        setTimeout(() => {
+          button.classList.remove('spin');
+        }, 400);
+      }
+    }
+
+    function refreshAllFrames(button) {
+      button.classList.add('spin');
+      document.querySelectorAll('.tool-frame').forEach(frame => {
+        frame.src = frame.src;
+      });
+      setTimeout(() => {
+        button.classList.remove('spin');
+      }, 600);
+    }
+
+    const refreshButton = document.querySelector('.refresh-icon');
+
+    refreshButton.addEventListener('mousedown', () => {
+      refreshAllTriggered = false;
+      refreshTimeout = setTimeout(() => {
+        refreshAllTriggered = true;
+        refreshAllFrames(refreshButton);
+      }, 750); // 0.75 seconds
+    });
+
+    refreshButton.addEventListener('mouseup', () => {
+      clearTimeout(refreshTimeout);
+      if (!refreshAllTriggered) {
+        refreshCurrentFrame(refreshButton);
+      }
+    });
+
+    refreshButton.addEventListener('mouseleave', () => {
+      clearTimeout(refreshTimeout);
+    });
+  </script>
+
+</body>
+</html>
