@@ -2,9 +2,34 @@ document.addEventListener("DOMContentLoaded", () => {
   const staffSelect = document.getElementById("staffMember");
   const roleSelect = document.getElementById("staffRole");
   const interactionsTextArea = document.getElementById("interactions");
+  const interactionsGroup = document.getElementById("interactionsGroup");
   const tooltip = document.createElement("div");
   tooltip.className = "tooltip";
   document.body.appendChild(tooltip);
+
+  const conditionSelect = document.getElementById("banAppealCondition");
+  let isBanAppealCondition = false;
+
+  // Handle Ban Appeal Condition dropdown
+  conditionSelect.addEventListener("change", () => {
+    const value = conditionSelect.value;
+    const tallyBox = document.querySelector(".tally-box");
+
+    if (value === "yes") {
+      isBanAppealCondition = true;
+      interactionsGroup.style.display = "none";
+      tallyBox.style.display = "none"; // hide tally
+    } else if (value === "no") {
+      isBanAppealCondition = false;
+      interactionsGroup.style.display = "flex";
+      tallyBox.style.display = "flex"; // show tally
+    } else {
+      // Reset to default (blank selection)
+      isBanAppealCondition = false;
+      interactionsGroup.style.display = "flex";
+      tallyBox.style.display = "flex"; // show tally
+    }
+  });
 
   // Load staff.json and populate dropdown
   let staffList = [];
@@ -125,25 +150,56 @@ document.addEventListener("DOMContentLoaded", () => {
       if (/ban/i.test(a)) ban++;
     });
 
-    // Transform each block to keep only first and third lines if available, else first two, else first line
-    const transformed = blocks
-      .map((b) => {
-        const L = b.split("\n").map((x) => x.trim()).filter((x) => x);
-        if (L.length >= 3) return L[0] + "\n" + L[2];
-        if (L.length === 2) return L[0] + "\n" + L[1];
-        return L[0] || "";
-      })
-      .join("\n\n");
+    // Output text logic
+let fullOutput = "";
+if (isBanAppealCondition) {
+  fullOutput = `Hello ${mention},
 
-    // Clean spacing in the transformed text
-    let processed = transformed
-      .replace(/(warn(?:ed)?|kick(?:ed)?|ban(?:ned)?)(?=\d)/gi, "$1 ")
-      .replace(/(warn(?:ed)?|kick(?:ed)?|ban(?:ned)?)(\s+by\s+\S+)/gi, "$1");
+Welcome back to the Beehive Community.
 
-    const cleaned = processed.split("\n").map((x) => x.trim()).join("\n");
+The Beehive Staff Team has reviewed your successful ban appeal and, as part of the conditions for returning to the server, you are being placed under the **Three Strike Policy (3SP)**. This policy ensures all returning members understand the expectations for roleplay and adherence to **[server rules](https://www.beehiverp.com/topic/1949-fivepd-rules/#comment-3383)**.
 
-    // Full 3SP template with code fences
-    const fullOutput = `Hello ${mention}, 
+As part of 3SP, any staff interaction that violates the server rules or guidelines will be considered a "strike." Any staff member is authorized to issue Strikes 1 & 2, while Strike 3 requires authorization from a Manager or higher. The consequences for strikes become progressively more severe, as outlined below:
+
+**Three Strike Policy:**
+- Strike 1: 1 Day Ban
+- Strike 2: 3 Day Ban
+- Strike 3: Permanent Ban | *These must be Authorized by a Manager or higher*
+
+In the event that you receive a third strike resulting in a Permanent Ban, you will have the opportunity to appeal this by **[creating a ban appeal ticket](https://discord.com/channels/815563382211739670/943801829777612860)**. Ban appeals are reviewed periodically during the staff's available time, and immediate unbanning is not guaranteed.
+
+**Working towards Coming Off 3SP:**
+We believe in second chances and positive change within our community. You can work towards coming off 3SP and returning to a normal stature within the community by demonstrating consistent good behavior and adherence to the server rules and guidelines. Engaging in positive roleplay, respecting fellow players and staff members, and actively contributing to a welcoming and enjoyable gaming environment.
+
+The Beehive Staff Team conduct monthly reviews of members who are on 3SP, assessing their conduct for that month. This review process aims to evaluate your progress and, when appropriate, grant your return to regular status within the community. Your continued good behavior and adherence to server rules will be taken into consideration during these reviews.
+
+**Please take note of the following:**  
+- Surveillance methods are in place even when no staff members are online to monitor player activities.  
+- The timeframe for being on 3SP is not predetermined; however, demonstrating good behavior and engaging in positive roleplay may lead to its removal sooner.  
+- Community Rule 11 always applies.
+
+If you have any questions or comments, feel free to share them below. Otherwise, please react to this message with a ✅ and we will close the ticket.
+
+Kind Regards,
+${staffMember},
+${staffRole}`;
+} else {
+      const transformed = blocks
+        .map((b) => {
+          const L = b.split("\n").map((x) => x.trim()).filter((x) => x);
+          if (L.length >= 3) return L[0] + "\n" + L[2];
+          if (L.length === 2) return L[0] + "\n" + L[1];
+          return L[0] || "";
+        })
+        .join("\n\n");
+
+      let processed = transformed
+        .replace(/(warn(?:ed)?|kick(?:ed)?|ban(?:ned)?)(?=\d)/gi, "$1 ")
+        .replace(/(warn(?:ed)?|kick(?:ed)?|ban(?:ned)?)(\s+by\s+\S+)/gi, "$1");
+
+      const cleaned = processed.split("\n").map((x) => x.trim()).join("\n");
+
+      fullOutput = `Hello ${mention}, 
 
 The Beehive Staff have noticed that you have been involved in multiple negative interactions (Warns/Kicks/Bans) on the server. It is apparent that there is a consistent breach of our server rules and guidelines, which raises concerns about the frequency of our interactions with you. 
 
@@ -178,7 +234,9 @@ If you have any questions or comments, feel free to share them below. Otherwise,
 Kind Regards,  
 ${staffMember},  
 ${staffRole}`;
+    }
 
+    // Render output
     const fullBox = document.getElementById("fullOutputContainer");
     const wrapper = document.getElementById("shortOutputsContainer");
     wrapper.innerHTML = "";
@@ -237,8 +295,12 @@ ${staffRole}`;
       });
     }
 
-    document.getElementById("warnCount").innerText = warn;
-    document.getElementById("kickCount").innerText = kick;
-    document.getElementById("banCount").innerText = ban;
+    // Update tally counts
+    const tallyBox = document.querySelector(".tally-box");
+    if (!isBanAppealCondition) {
+      document.getElementById("warnCount").innerText = warn;
+      document.getElementById("kickCount").innerText = kick;
+      document.getElementById("banCount").innerText = ban;
+    }
   });
 });
