@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff List Editor</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e1e;
+      color: white;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .layout {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 40px;
+      row-gap: 20px;
+      justify-content: center;
+      padding: 10px;
+    }
+
+	.drag-handle {
+	cursor: grab;
+	text-align: center;
+	user-select: none;
+	width: 32px;
+	}
+	
+	.drag-handle svg {
+	display: inline-block;
+	vertical-align: middle;
+	}
+
+
+
+    .form-panel, .table-panel {
+      flex: 1;
+      min-width: 300px;
+      padding: 15px;
+      background-color: #2a2a2a;
+      border-radius: 8px;
+    }
+
+    .form-element {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+
+    input, select, button {
+      width: 100%;
+      max-width: 100%;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #aaa;
+      background: #333;
+      color: white;
+      font-size: 1em;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background-color: #28a745;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #555;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .remove-btn {
+      background-color: #dc3545;
+      padding: 5px;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .drag-handle {
+      cursor: grab;
+      font-size: 1.2em;
+      text-align: center;
+    }
+
+    tr.dragging {
+      opacity: 0.6;
+    }
+
+    .role-label {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-weight: bold;
+      color: black;
+      text-align: center;
+    }
+
+    .role-Director { background-color: #FFD700; }
+    .role-Executive { background-color: #B266FF; color: white; }
+    .role-Manager { background-color: #FF4C4C; }
+    .role-Administrator { background-color: #4DD0E1; }
+    .role-Moderator { background-color: #2196F3; color: white; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+</head>
+<body>
+  <div class="main-container">
+    <h2>Staff List Editor</h2>
+    <div class="layout">
+      <div class="form-panel">
+        <div class="form-element">
+          <label for="name">Staff Member</label>
+          <input type="text" id="name" placeholder="e.g. OnSmoko" />
+        </div>
+
+        <div class="form-element">
+          <label for="role">Role:</label>
+          <select id="role">
+            <option value="Moderator">Moderator</option>
+            <option value="Administrator">Administrator</option>
+            <option value="Manager">Manager</option>
+            <option value="Executive">Executive</option>
+            <option value="Director">Director</option>
+          </select>
+        </div>
+
+        <div class="form-element">
+          <button onclick="addStaff()">Add User</button>
+        </div>
+
+        <div class="form-element">
+          <input type="file" id="importFile" accept=".json" />
+        </div>
+
+        <div class="form-element">
+          <button onclick="importJSON()">Import</button>
+        </div>
+
+        <div class="form-element">
+          <button onclick="downloadJSON()">Download</button>
+        </div>
+      </div>
+
+      <div class="table-panel">
+        <table id="staffTable">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let staff = [];
+
+    function renderTable() {
+      const tbody = document.querySelector("#staffTable tbody");
+      tbody.innerHTML = "";
+      staff.forEach((s, i) => {
+        const row = document.createElement("tr");
+        const roleClass = s.role.replace(/\s/g, '');
+        row.innerHTML = `
+         <td class="drag-handle" title="Drag to reorder">
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16">
+		<path d="M2 4h12v1H2V4zm0 3h12v1H2V7zm0 3h12v1H2v-1z"/>
+		</svg>
+		</td>
+          <td>${s.name}</td>
+          <td><span class="role-label role-${roleClass}">${s.role}</span></td>
+          <td><button class="remove-btn" onclick="removeStaff(${i})">Remove</button></td>
+        `;
+        row.setAttribute("data-id", i);
+        tbody.appendChild(row);
+      });
+    }
+
+    function addStaff() {
+      const name = document.getElementById("name").value.trim();
+      const role = document.getElementById("role").value;
+      if (name && role) {
+        staff.push({ name, role });
+        renderTable();
+        document.getElementById("name").value = "";
+      }
+    }
+
+    function removeStaff(index) {
+      staff.splice(index, 1);
+      renderTable();
+    }
+
+    function downloadJSON() {
+      const blob = new Blob([JSON.stringify(staff, null, 2)], {
+        type: "application/json"
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "staff.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importJSON() {
+      const fileInput = document.getElementById("importFile");
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (Array.isArray(data)) {
+            staff = data;
+            renderTable();
+          } else {
+            alert("Invalid JSON format");
+          }
+        } catch (err) {
+          alert("Failed to parse JSON: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    new Sortable(document.querySelector("#staffTable tbody"), {
+      handle: ".drag-handle",
+      animation: 150,
+      onEnd: () => {
+        const newOrder = [];
+        document.querySelectorAll("#staffTable tbody tr").forEach(row => {
+          const index = parseInt(row.getAttribute("data-id"));
+          newOrder.push(staff[index]);
+        });
+        staff = newOrder;
+        renderTable();
+      }
+    });
+  </script>
+</body>
+</html>
