@@ -18,16 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (value === "yes") {
       isBanAppealCondition = true;
       interactionsGroup.style.display = "none";
-      tallyBox.style.display = "none"; // hide tally
-    } else if (value === "no") {
-      isBanAppealCondition = false;
-      interactionsGroup.style.display = "flex";
-      tallyBox.style.display = "flex"; // show tally
+      tallyBox.style.display = "none";
     } else {
-      // Reset to default (blank selection)
       isBanAppealCondition = false;
       interactionsGroup.style.display = "flex";
-      tallyBox.style.display = "flex"; // show tally
+      tallyBox.style.display = "flex";
     }
   });
 
@@ -111,6 +106,44 @@ document.addEventListener("DOMContentLoaded", () => {
     return blocks;
   }
 
+  // Filter revoked + older than 3 months
+  function filterRecentInfractions(blocks) {
+    const now = new Date();
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(now.getMonth() - 3);
+
+    return blocks.filter((b) => {
+      if (/revoked by/i.test(b)) return false;
+
+      // Match numeric dates or month-name dates
+      const dateMatch = b.match(
+        /(\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4}|\d{4}-\d{2}-\d{2}|[A-Za-z]{3} \d{1,2}, \d{4})/
+      );
+
+      if (!dateMatch) return true; // assume recent if no date
+
+      const dateStr = dateMatch[0];
+      let infractionDate;
+
+      // yyyy-mm-dd
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        infractionDate = new Date(dateStr);
+      }
+      // dd/mm/yyyy or dd-mm-yyyy
+      else if (/^\d{1,2}[\/-]\d{1,2}[\/-]\d{2,4}$/.test(dateStr)) {
+        const parts = dateStr.includes("/") ? dateStr.split("/") : dateStr.split("-");
+        const [d, m, y] = parts[2].length === 2 ? [parts[0], parts[1], "20" + parts[2]] : parts;
+        infractionDate = new Date(`${y}-${m}-${d}`);
+      }
+      // Month-name date (e.g., Sep 5, 2025)
+      else {
+        infractionDate = new Date(dateStr);
+      }
+
+      return infractionDate >= threeMonthsAgo;
+    });
+  }
+
   // Tooltip attach helper
   function attachTooltip(el) {
     el.addEventListener("mouseenter", (e) => {
@@ -138,26 +171,22 @@ document.addEventListener("DOMContentLoaded", () => {
     countBoxEl.textContent = "";
     countBoxEl.style.display = "none";
 
-    // Group and filter revoked
-    const blocks = groupInfractions(interactions).filter((b) => !/revoked by/i.test(b));
-    let warn = 0,
-      kick = 0,
-      ban = 0;
-    blocks.forEach((b) => {
-      const a = b.split("\n")[0].trim();
-      if (/warn/i.test(a)) warn++;
-      if (/kick/i.test(a)) kick++;
-      if (/ban/i.test(a)) ban++;
-    });
+    // Group + filter
+    let blocks = groupInfractions(interactions);
+    if (!isBanAppealCondition) {
+      blocks = filterRecentInfractions(blocks);
+    }
 
     // Output text logic
-let fullOutput = "";
-if (isBanAppealCondition) {
-  fullOutput = `Hello ${mention},
+    let fullOutput = "";
+
+    if (isBanAppealCondition) {
+      // Returning users → no summary
+      fullOutput = `Hello ${mention},
 
 Welcome back to the Beehive Community.
 
-The Beehive Staff Team has reviewed your successful ban appeal and, as part of the conditions for returning to the server, you are being placed under the **Three Strike Policy (3SP)**. This policy ensures all returning members understand the expectations for roleplay and adherence to **[server rules](https://www.beehiverp.com/topic/1949-fivepd-rules/#comment-3383)**.
+The Beehive Staff Team has reviewed your ban appeal and, as part of the conditions for returning to the server, you are being placed under the **Three Strike Policy (3SP)**. This policy ensures all returning members understand the expectations for roleplay and adherence to **[server rules](https://www.beehiverp.com/topic/1949-fivepd-rules/#comment-3383)**.
 
 As part of 3SP, any staff interaction that violates the server rules or guidelines will be considered a "strike." Any staff member is authorized to issue Strikes 1 & 2, while Strike 3 requires authorization from a Manager or higher. The consequences for strikes become progressively more severe, as outlined below:
 
@@ -180,10 +209,11 @@ The Beehive Staff Team conduct monthly reviews of members who are on 3SP, assess
 
 If you have any questions or comments, feel free to share them below. Otherwise, please react to this message with a ✅ and we will close the ticket.
 
-Kind Regards,
+*Kind Regards,
 ${staffMember},
-${staffRole}`;
-} else {
+${staffRole}*`;
+    } else {
+      // New 3SP users → summary needed
       const transformed = blocks
         .map((b) => {
           const L = b.split("\n").map((x) => x.trim()).filter((x) => x);
@@ -201,11 +231,11 @@ ${staffRole}`;
 
       fullOutput = `Hello ${mention}, 
 
-The Beehive Staff have noticed that you have been involved in multiple negative interactions (Warns/Kicks/Bans) on the server. It is apparent that there is a consistent breach of our server rules and guidelines, which raises concerns about the frequency of our interactions with you. 
+The Beehive Staff have noticed that you have been involved in multiple negative interactions (Kicks/Warns/Bans) on the server. It is apparent that there is a consistent breach of our server rules and guidelines, which raises concerns about the frequency of our interactions with you. 
 
 Below is a summary of your prior staff interactions:
 \`\`\`
-${cleaned}
+${cleaned || "Nil"}
 \`\`\`
 
 Due to these interactions, the Beehive Staff Team now require an immediate adjustment in your roleplay approach. Strict compliance with our server rules and guidelines is imperative. 
@@ -231,9 +261,9 @@ The Beehive Staff Team conduct monthly reviews of members who are on 3SP, assess
 
 If you have any questions or comments, feel free to share them below. Otherwise, please react to this message with a ✅ and we will close the ticket.
 
-Kind Regards,  
+*Kind Regards,  
 ${staffMember},  
-${staffRole}`;
+${staffRole}*`;
     }
 
     // Render output
@@ -296,7 +326,6 @@ ${staffRole}`;
     }
 
     // Update tally counts
-    const tallyBox = document.querySelector(".tally-box");
     if (!isBanAppealCondition) {
       document.getElementById("warnCount").innerText = warn;
       document.getElementById("kickCount").innerText = kick;
