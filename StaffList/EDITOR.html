@@ -35,19 +35,17 @@
       padding: 10px;
     }
 
-	.drag-handle {
-	cursor: grab;
-	text-align: center;
-	user-select: none;
-	width: 32px;
-	}
-	
-	.drag-handle svg {
-	display: inline-block;
-	vertical-align: middle;
-	}
+    .drag-handle {
+      cursor: grab;
+      text-align: center;
+      user-select: none;
+      width: 32px;
+    }
 
-
+    .drag-handle svg {
+      display: inline-block;
+      vertical-align: middle;
+    }
 
     .form-panel, .table-panel {
       flex: 1;
@@ -105,12 +103,6 @@
       cursor: pointer;
     }
 
-    .drag-handle {
-      cursor: grab;
-      font-size: 1.2em;
-      text-align: center;
-    }
-
     tr.dragging {
       opacity: 0.6;
     }
@@ -150,6 +142,16 @@
             <option value="Manager">Manager</option>
             <option value="Executive">Executive</option>
             <option value="Director">Director</option>
+          </select>
+        </div>
+
+        <!-- Sort by dropdown -->
+        <div class="form-element">
+          <label for="sort">Sort by:</label>
+          <select id="sort" onchange="sortStaff()">
+            <option value="">-- Select --</option>
+            <option value="alphabetical">Alphabetical</option>
+            <option value="role">Role</option>
           </select>
         </div>
 
@@ -196,11 +198,11 @@
         const row = document.createElement("tr");
         const roleClass = s.role.replace(/\s/g, '');
         row.innerHTML = `
-         <td class="drag-handle" title="Drag to reorder">
-		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16">
-		<path d="M2 4h12v1H2V4zm0 3h12v1H2V7zm0 3h12v1H2v-1z"/>
-		</svg>
-		</td>
+          <td class="drag-handle" title="Drag to reorder">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16">
+              <path d="M2 4h12v1H2V4zm0 3h12v1H2V7zm0 3h12v1H2v-1z"/>
+            </svg>
+          </td>
           <td>${s.name}</td>
           <td><span class="role-label role-${roleClass}">${s.role}</span></td>
           <td><button class="remove-btn" onclick="removeStaff(${i})">Remove</button></td>
@@ -257,6 +259,19 @@
         }
       };
       reader.readAsText(file);
+    }
+
+    function sortStaff() {
+      const sortType = document.getElementById("sort").value;
+      
+      if (sortType === "alphabetical") {
+        staff.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortType === "role") {
+        const hierarchy = ["Director", "Executive", "Manager", "Administrator", "Moderator"];
+        staff.sort((a, b) => hierarchy.indexOf(a.role) - hierarchy.indexOf(b.role));
+      }
+      
+      renderTable();
     }
 
     new Sortable(document.querySelector("#staffTable tbody"), {
