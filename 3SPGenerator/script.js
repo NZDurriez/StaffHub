@@ -177,6 +177,22 @@ document.addEventListener("DOMContentLoaded", () => {
       blocks = filterRecentInfractions(blocks);
     }
 
+    // Count infractions
+    let warn = 0, kick = 0, ban = 0;
+    blocks.forEach(block => {
+      const lower = block.toLowerCase();
+      if (/warn(ed)?/.test(lower)) warn++;
+      if (/kick(ed)?/.test(lower)) kick++;
+      if (/ban(ned)?/.test(lower)) ban++;
+    });
+
+    // Update tally
+    if (!isBanAppealCondition) {
+      document.getElementById("warnCount").innerText = warn;
+      document.getElementById("kickCount").innerText = kick;
+      document.getElementById("banCount").innerText = ban;
+    }
+
     // Output text logic
     let fullOutput = "";
 
@@ -323,13 +339,6 @@ ${staffRole}*`;
 
         wrapper.appendChild(box);
       });
-    }
-
-    // Update tally counts
-    if (!isBanAppealCondition) {
-      document.getElementById("warnCount").innerText = warn;
-      document.getElementById("kickCount").innerText = kick;
-      document.getElementById("banCount").innerText = ban;
     }
   });
 });
