@@ -1,77 +1,125 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
   background: #1e1e1e;
   color: white;
+  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 2rem;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
 }
 
 .container {
-  max-width: 800px;
-  margin: auto;
+  max-width: 750px;
+  width: 100%;
   background: #333;
-  padding: 2rem;
-  border-radius: 12px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  margin-top: 20px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0;
 }
 
 input,
-textarea,
 select,
-button {
+textarea {
   width: 100%;
-  padding: 0.6rem;
-  margin: 0.5rem 0 1rem;
-  border: none;
-  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #aaa;
   background: #555;
   color: white;
-  font-size: 1rem;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+input[disabled],
+select[disabled],
+textarea[disabled] {
+  background: #444;
+  color: #999;
+  cursor: not-allowed;
 }
 
 button {
-  background-color: #666;
+  width: 100%;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 1em;
   cursor: pointer;
-  transition: background 0.2s ease;
 }
 
 button:hover {
-  background-color: #888;
+  background: #0056b3;
 }
 
-.output-container {
-  margin-top: 2rem;
-  background: #222;
-  padding: 1rem;
-  border-radius: 10px;
-}
-
-.hidden {
-  display: none;
-}
-
-pre {
+.output-box {
+  position: relative;
+  background: #444;
+  border: 1px solid #666;
+  padding: 12px;
+  margin-top: 15px;
+  cursor: pointer;
   white-space: pre-wrap;
-  word-wrap: break-word;
-  font-family: monospace;
-  background-color: #111;
-  padding: 1rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
+  overflow: hidden;
 }
 
-/* NEW: Make the date input field more clickable */
-.date-wrapper {
-  margin-bottom: 1rem;
-  cursor: pointer;
+.output-box:hover {
+  border-color: #28a745;
 }
 
-.date-wrapper label,
-.date-wrapper input[type="date"] {
-  display: block;
-  width: 100%;
-  padding: 0.3rem 0;
+/* Copied stamp */
+.copy-stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.85;
+  max-width: 70%;
+  max-height: 70%;
 }
 
-input[type="date"] {
-  cursor: pointer;
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75em;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+  z-index: 9999;
 }
+
+.tally-box {
+  display: none;
+  margin: 10px auto; /* centers horizontally */
+  background: #28a745;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  width: fit-content;
+  text-align: center; /* optional, ensures text is centered inside box */
+}
+
