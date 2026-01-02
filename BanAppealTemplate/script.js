@@ -118,7 +118,7 @@ The Beehive Staff Team conduct monthly reviews of members who are on 3SP, assess
 
 **Please take note of the following:**  
 - Surveillance methods are in place even when no staff members are online to monitor player activities.  
-- The timeframe for being on 3SP is not predetermined; however, demonstrating good behavior and engaging in positive roleplay may lead to its removal sooner.  
+- The 3SP period is set at 60 days. Any strike received during this time will immediately reset the 60-day timeframe.  
 - Community Rule 11 always applies.
 
 If you have any questions or comments, feel free to share them below. Otherwise, please react to this message with a ✅ and we will close the ticket.
@@ -192,3 +192,4 @@ ${staffRole}*`;
     return parts;
   }
 });
+
