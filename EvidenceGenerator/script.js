@@ -1,59 +1,70 @@
-// Function to update the output in real time
+// ---------------- Tooltip ----------------
+const tooltip = document.createElement("div");
+tooltip.className = "tooltip";
+tooltip.textContent = "Click to copy";
+document.body.appendChild(tooltip);
+
+document.addEventListener("mousemove", e => {
+  tooltip.style.left = e.pageX + 10 + "px";
+  tooltip.style.top = e.pageY + 10 + "px";
+});
+
+// ---------------- Output Update ----------------
 function updateEvidenceOutput() {
-    // Get field values
-    const caseText = document.getElementById("case").value.trim() || "N/A";
-    const platform = document.getElementById("platform").value || "N/A";
-    let discordId = document.getElementById("discord").value.trim() || "N/A";
-    const background = document.getElementById("background").value.trim() || "N/A";
-    const evidence = document.getElementById("evidence").value.trim() || "N/A";
-    const finalRes = document.getElementById("finalRes").value.trim() || "N/A";
-    const idType = document.getElementById("idType").value || "N/A";
-    const idValue = document.getElementById("idValue").value.trim() || "N/A";
+  const caseText = document.getElementById("case").value.trim() || "N/A";
+  const platform = document.getElementById("platform").value || "N/A";
+  let discordId = document.getElementById("discord").value.trim() || "N/A";
+  const background = document.getElementById("background").value.trim() || "N/A";
+  const evidence = document.getElementById("evidence").value.trim() || "N/A";
+  const finalRes = document.getElementById("finalRes").value.trim() || "N/A";
+  const idType = document.getElementById("idType").value || "N/A";
+  const idValue = document.getElementById("idValue").value.trim() || "N/A";
 
-    // Ensure Discord ID is numeric only
-    discordId = discordId.replace(/\D/g, '') || "N/A";
+  discordId = discordId.replace(/\D/g, "") || "N/A";
 
-    // Construct output text
-    const outputText = `Case: ${caseText}\n` +
-                       `Platform: ${platform}\n` +
-                       `Discord: ${discordId !== "N/A" ? `<@${discordId}>` : "N/A"}\n` +
-                       `Background: ${background}\n` +
-                       `Evidence: ${evidence}\n` +
-                       `Final Res: ${finalRes}\n` +
-                       `${idType}: ${idValue}`;
+  const outputText =
+`Case: ${caseText}
+Platform: ${platform}
+Discord: ${discordId !== "N/A" ? `<@${discordId}>` : "N/A"}
+Background: ${background}
+Evidence: ${evidence}
+Final Res: ${finalRes}
+${idType}: ${idValue}`;
 
-    // Display formatted output
-    const outputElement = document.getElementById("output");
-    outputElement.innerText = outputText;
-    outputElement.style.display = "block";
+  document.getElementById("output").textContent = outputText;
 }
 
-// Function to copy output to clipboard
-function copyToClipboard() {
-    const outputText = document.getElementById("output").innerText;
-    navigator.clipboard.writeText(outputText).then(() => {
-        const copyBtn = document.getElementById("copyBtn");
-        copyBtn.innerText = "Copied!";
-        setTimeout(() => {
-            copyBtn.innerText = "Copy";
-        }, 1500);
-    });
-}
+// ---------------- DOM Ready ----------------
+document.addEventListener("DOMContentLoaded", () => {
+  const inputs = document.querySelectorAll(
+    "#case, #platform, #discord, #background, #evidence, #finalRes, #idType, #idValue"
+  );
 
-// Attach events once the DOM is loaded
-document.addEventListener("DOMContentLoaded", function () {
-    // Select all input, textarea, and select elements
-    const inputs = document.querySelectorAll("#case, #platform, #discord, #background, #evidence, #finalRes, #idType, #idValue");
-    
-    // Add event listeners for real-time updates
-    inputs.forEach(input => {
-        input.addEventListener("input", updateEvidenceOutput);
-        input.addEventListener("change", updateEvidenceOutput);
-    });
+  inputs.forEach(input => {
+    input.addEventListener("input", updateEvidenceOutput);
+    input.addEventListener("change", updateEvidenceOutput);
+  });
 
-    // Copy button listener
-    document.getElementById("copyBtn").addEventListener("click", copyToClipboard);
+  const outputBox = document.getElementById("output");
 
-    // Initialize output on page load
-    updateEvidenceOutput();
+  outputBox.addEventListener("mouseenter", () => {
+    tooltip.style.opacity = "1";
+  });
+
+  outputBox.addEventListener("mouseleave", () => {
+    tooltip.style.opacity = "0";
+  });
+
+  outputBox.addEventListener("click", () => {
+    navigator.clipboard.writeText(outputBox.textContent);
+
+    if (!outputBox.querySelector(".copy-stamp")) {
+      const stamp = document.createElement("img");
+      stamp.src = "copied-stamp.png";
+      stamp.className = "copy-stamp";
+      outputBox.appendChild(stamp);
+    }
+  });
+
+  updateEvidenceOutput();
 });
