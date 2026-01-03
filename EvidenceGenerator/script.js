@@ -1,70 +1,127 @@
-// ---------------- Tooltip ----------------
-const tooltip = document.createElement("div");
-tooltip.className = "tooltip";
-tooltip.textContent = "Click to copy";
-document.body.appendChild(tooltip);
-
-document.addEventListener("mousemove", e => {
-  tooltip.style.left = e.pageX + 10 + "px";
-  tooltip.style.top = e.pageY + 10 + "px";
-});
-
-// ---------------- Output Update ----------------
-function updateEvidenceOutput() {
-  const caseText = document.getElementById("case").value.trim() || "N/A";
-  const platform = document.getElementById("platform").value || "N/A";
-  let discordId = document.getElementById("discord").value.trim() || "N/A";
-  const background = document.getElementById("background").value.trim() || "N/A";
-  const evidence = document.getElementById("evidence").value.trim() || "N/A";
-  const finalRes = document.getElementById("finalRes").value.trim() || "N/A";
-  const idType = document.getElementById("idType").value || "N/A";
-  const idValue = document.getElementById("idValue").value.trim() || "N/A";
-
-  discordId = discordId.replace(/\D/g, "") || "N/A";
-
-  const outputText =
-`Case: ${caseText}
-Platform: ${platform}
-Discord: ${discordId !== "N/A" ? `<@${discordId}>` : "N/A"}
-Background: ${background}
-Evidence: ${evidence}
-Final Res: ${finalRes}
-${idType}: ${idValue}`;
-
-  document.getElementById("output").textContent = outputText;
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-// ---------------- DOM Ready ----------------
-document.addEventListener("DOMContentLoaded", () => {
-  const inputs = document.querySelectorAll(
-    "#case, #platform, #discord, #background, #evidence, #finalRes, #idType, #idValue"
-  );
+body {
+  background: #1e1e1e;
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* 🔑 prevent vertical stretching */
+  min-height: 100vh;
+}
 
-  inputs.forEach(input => {
-    input.addEventListener("input", updateEvidenceOutput);
-    input.addEventListener("change", updateEvidenceOutput);
-  });
+.container {
+  max-width: 900px;
+  width: 100%;
+  background: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  margin-top: 20px;
+}
 
-  const outputBox = document.getElementById("output");
+/* Layout */
+.content-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start; /* 🔑 key fix */
+}
 
-  outputBox.addEventListener("mouseenter", () => {
-    tooltip.style.opacity = "1";
-  });
+/* LEFT */
+.form-container {
+  flex: 1;
+}
 
-  outputBox.addEventListener("mouseleave", () => {
-    tooltip.style.opacity = "0";
-  });
+.form-group {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0;
+}
 
-  outputBox.addEventListener("click", () => {
-    navigator.clipboard.writeText(outputBox.textContent);
+label {
+  margin-bottom: 5px;
+}
 
-    if (!outputBox.querySelector(".copy-stamp")) {
-      const stamp = document.createElement("img");
-      stamp.src = "copied-stamp.png";
-      stamp.className = "copy-stamp";
-      outputBox.appendChild(stamp);
-    }
-  });
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #aaa;
+  background: #555;
+  color: white;
+  border-radius: 5px;
+}
 
-  updateEvidenceOutput();
-});
+/* RIGHT */
+.output-container {
+  flex: 1;
+  background: transparent;
+}
+
+/* OUTPUT BOX */
+.output-box {
+  position: relative;
+  width: 100%;
+  background: #444;
+  border: 1px solid #666;
+  padding: 12px;
+  cursor: pointer;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  text-align: left;
+  font-family: monospace;
+  border-radius: 5px;
+
+  /* Align with first input field */
+  margin-top: 28px;
+
+  /* 🔑 do NOT stretch height */
+  height: auto;
+  min-height: 120px;
+}
+
+.output-box:hover {
+  border-color: #28a745;
+}
+
+/* Copied stamp */
+.copy-stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-10deg);
+  pointer-events: none;
+  opacity: 0.85;
+  max-width: 70%;
+  max-height: 70%;
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75em;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+  z-index: 9999;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .output-box {
+    margin-top: 0;
+  }
+}
