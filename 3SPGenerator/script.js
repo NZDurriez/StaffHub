@@ -218,9 +218,9 @@ We believe in second chances and positive change within our community. You can w
 
 The Beehive Staff Team conduct monthly reviews of members who are on 3SP, assessing their conduct for that month. This review process aims to evaluate your progress and, when appropriate, grant your return to regular status within the community. Your continued good behavior and adherence to server rules will be taken into consideration during these reviews.
 
-**Please take note of the following:**  
-- Surveillance methods are in place even when no staff members are online to monitor player activities.  
+**Please take note of the following:**
 - The 3SP period is set at 60 days. Any strike received during this time will immediately reset the 60-day timeframe, you must also remain an active member of the community playing within your 3SP period.
+- Surveillance methods are in place, even when no staff members are online to monitor player activities.  
 - Community Rule 11 always applies.
 
 If you have any questions or comments, feel free to share them below. Otherwise, please react to this message with a ✅ and we will close the ticket.
@@ -270,9 +270,9 @@ We believe in second chances and positive change within our community. You can w
 
 The Beehive Staff Team conduct monthly reviews of members who are on 3SP, assessing their conduct for that month. This review process aims to evaluate your progress and, when appropriate, grant your return to regular status within the community. Your continued good behavior and adherence to server rules will be taken into consideration during these reviews. 
 
-**Please take note of the following:**  
-- Surveillance methods are in place even when no staff members are online to monitor player activities.  
+**Please take note of the following:**
 - The 3SP period is set at 60 days. Any strike received during this time will immediately reset the 60-day timeframe, you must also remain an active member of the community playing within your 3SP period.
+- Surveillance methods are in place, even when no staff members are online to monitor player activities.  
 - Community Rule 11 always applies.  
 
 If you have any questions or comments, feel free to share them below. Otherwise, please react to this message with a ✅ and we will close the ticket.
