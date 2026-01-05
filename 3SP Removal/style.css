@@ -1,0 +1,145 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  background: #1e1e1e;
+  color: white;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 750px;
+  width: 100%;
+  background: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  margin-top: 20px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #aaa;
+  background: #555;
+  color: white;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+input[disabled],
+select[disabled],
+textarea[disabled] {
+  background: #444;
+  color: #999;
+  cursor: not-allowed;
+}
+
+button {
+  width: 100%;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+/* Authorization buttons */
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.auth-buttons button {
+  flex: 1;
+}
+
+.btn-yes {
+  background: #28a745;
+}
+
+.btn-yes:hover {
+  background: #1e7e34;
+}
+
+.btn-no {
+  background: #dc3545;
+}
+
+.btn-no:hover {
+  background: #a71d2a;
+}
+
+/* Output Box (Tightened) */
+.output-box {
+  position: relative;
+  background: #444;
+  border: 1px solid #666;
+  padding: 8px 10px;
+  margin-top: 12px;
+  cursor: pointer;
+  white-space: pre-wrap;
+  overflow: hidden;
+  line-height: 1.35;
+  font-size: 0.95em;
+}
+
+.output-box:hover {
+  border-color: #28a745;
+}
+
+.output-box p {
+  margin: 0;
+}
+
+/* Copied stamp */
+.copy-stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.8;
+  max-width: 55%;
+  max-height: 55%;
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 0.7em;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease-in-out;
+  z-index: 9999;
+}

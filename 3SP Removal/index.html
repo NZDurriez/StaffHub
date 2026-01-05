@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3SP Removal Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Authorization Gate -->
+  <div id="authGate" class="container">
+    <h2 class="title">Before you proceed</h2>
+    <p style="text-align:center; margin-bottom:15px;">
+      Do you have authorization from a manager to remove users from 3SP?
+    </p>
+
+    <div class="auth-buttons">
+      <button id="authYes" class="btn-yes">Yes</button>
+      <button id="authNo" class="btn-no">No</button>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div class="container" id="mainApp" style="display:none;">
+    <h2 class="title">3SP Removal Generator</h2>
+
+    <div class="form-group">
+      <label>Discord IDs (one per line)</label>
+      <textarea
+        id="discordIDs"
+        placeholder="445805027760799741
+147963835339243522"
+      ></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Staff Member</label>
+      <select id="staffMember">
+        <option value="">Loading staff...</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Your Role</label>
+      <select id="staffRole" disabled>
+        <option value="">-</option>
+      </select>
+    </div>
+
+    <button id="generateRemoval">Generate</button>
+
+    <div id="outputContainer" class="output-box" style="display:none;">
+      <div class="tooltip" id="tooltip">Click to copy</div>
+      <p id="outputText"></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
