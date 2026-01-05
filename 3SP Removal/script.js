@@ -85,12 +85,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const message = `Kia ora, ${mentions}
 
-We're reaching out to let you know that you have successfully completed your time on 3SP without any further staff actions. As a result, you are now being removed from the 3SP.
+We're reaching out to let you know that you have successfully completed your time on 3SP without any further staff actions. As a result, you are now being removed from our Three Strike Policy.
 
-We appreciate your improvement in your server performance and hope this positive trend continues.
+We appreciate your improvement in your server performance and hope that this positive trend continues.
 
-Please be aware that we keep records of 3SP participants, and if the behavior that led to your placement on 3SP resumes, you may be reinstated swiftly.
-
+Please be aware that we keep records of 3SP participants, and if similar behavior that led to your placement on 3SP resumes, you may be reinstated swiftly.
 If you have any questions, feel free to ask in this ticket.
 
 A response is optional, but if you wish to acknowledge this message, please reply with a ✅ to confirm your awareness of your removal from 3SP.
