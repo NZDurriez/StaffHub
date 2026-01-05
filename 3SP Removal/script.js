@@ -54,13 +54,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Format Discord mentions with commas
+  // Accepts raw numbers, Discord:<id>, or <@id> copied from mobile/TX
   function formatMentions(input) {
-    return input
-      .split("\n")
-      .map(id => id.replace(/\D/g, ""))
-      .filter(Boolean)
-      .map(id => `<@${id}>`)
-      .join(", ");
+    const ids = [];
+    input.split("\n").forEach(line => {
+      const match = line.match(/\d{15,20}/); // Discord IDs are 15–20 digits
+      if (match) ids.push(match[0]);
+    });
+    return ids.map(id => `<@${id}>`).join(", ");
   }
 
   // Tooltip handling
