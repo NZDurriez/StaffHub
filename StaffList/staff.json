@@ -56,6 +56,10 @@
     "role": "Administrator"
   },
   {
+    "name": "Jayden",
+    "role": "Moderator"
+  },
+  {
     "name": "Knoah",
     "role": "Moderator"
   },
@@ -68,12 +72,20 @@
     "role": "Manager"
   },
   {
+    "name": "OldMateSOlsen",
+    "role": "Moderator"
+  },
+  {
     "name": "Oli",
     "role": "Manager"
   },
   {
     "name": "OnSmoko",
     "role": "Administrator"
+  },
+  {
+    "name": "Pablo",
+    "role": "Moderator"
   },
   {
     "name": "Pandakazii",
@@ -84,8 +96,12 @@
     "role": "Moderator"
   },
   {
-    "name": "Toast",
+    "name": "Spiritus",
     "role": "Manager"
+  },
+  {
+    "name": "Toast",
+    "role": "Administrator"
   },
   {
     "name": "Wohny",
