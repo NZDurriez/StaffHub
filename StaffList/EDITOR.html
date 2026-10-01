@@ -4,129 +4,100 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Staff List Editor</title>
+  <link rel="stylesheet" href="../theme.css" />
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background: #1e1e1e;
-      color: white;
-      padding: 20px;
-      margin: 0;
-    }
-
-    h2 {
-      text-align: center;
-    }
-
-    .main-container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+    /* Staff List Editor layout only; look & feel comes from ../theme.css */
+    .main-container { max-width: 1200px; margin: 0 auto; }
 
     .layout {
-      display: flex;
-      flex-wrap: wrap;
-      column-gap: 40px;
-      row-gap: 20px;
-      justify-content: center;
-      padding: 10px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+      align-items: start;
     }
 
-    .drag-handle {
-      cursor: grab;
-      text-align: center;
-      user-select: none;
-      width: 32px;
-    }
+    .form-panel, .table-panel { padding: 22px; }
+    .form-panel { position: sticky; top: 20px; }
 
-    .drag-handle svg {
-      display: inline-block;
-      vertical-align: middle;
+    .form-element { display: flex; flex-direction: column; margin-bottom: 14px; }
+    .form-element button { margin-top: 0; }
+    .form-element:has(#importFile) {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
     }
-
-    .form-panel, .table-panel {
-      flex: 1;
-      min-width: 300px;
-      padding: 15px;
-      background-color: #2a2a2a;
-      border-radius: 8px;
+    /* Import / Download are secondary actions */
+    .form-element:has(#importFile) ~ .form-element button {
+      color: var(--ink);
+      background: var(--card-2);
+      border: 1px solid var(--line-2);
+      box-shadow: none;
     }
+    .form-element:has(#importFile) ~ .form-element button:hover { border-color: var(--honey); filter: none; }
 
-    .form-element {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 10px;
-    }
-
-    input, select, button {
-      width: 100%;
-      max-width: 100%;
-      padding: 10px;
-      border-radius: 4px;
-      border: 1px solid #aaa;
-      background: #333;
-      color: white;
-      font-size: 1em;
-    }
-
-    button {
-      cursor: pointer;
-      border: none;
-      background-color: #28a745;
-    }
-
-    button:hover {
-      background-color: #218838;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th, td {
-      border: 1px solid #555;
-      padding: 8px;
+    table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    th {
       text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 12px 12px;
+      border-bottom: 1px solid var(--line);
     }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--line); font-weight: 500; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover td { background: rgba(255,255,255,.02); }
+    tbody:empty::after {
+      content: "No staff loaded yet. Import staff.json or add someone.";
+      display: block;
+      padding: 28px 12px;
+      color: var(--muted);
+    }
+
+    .drag-handle { cursor: grab; text-align: center; user-select: none; width: 40px; opacity: .5; }
+    .drag-handle:hover { opacity: 1; }
+    .drag-handle svg { display: inline-block; vertical-align: middle; }
+    tr.dragging, .sortable-ghost { opacity: .5; }
 
     .remove-btn {
-      background-color: #dc3545;
-      padding: 5px;
-      border: none;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
+      width: auto;
+      margin: 0;
+      padding: 6px 12px;
+      font-size: 13px;
+      color: #fca5a5;
+      background: rgba(239,68,68,.1);
+      border: 1px solid rgba(239,68,68,.35);
+      box-shadow: none;
     }
-
-    tr.dragging {
-      opacity: 0.6;
-    }
+    .remove-btn:hover { background: rgba(239,68,68,.2); filter: none; box-shadow: none; }
 
     .role-label {
       display: inline-block;
-      padding: 4px 8px;
-      border-radius: 5px;
-      font-weight: bold;
-      color: black;
-      text-align: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      border: 1px solid currentColor;
     }
+    .role-Director { color: #facc15; background: rgba(250,204,21,.1); }
+    .role-Executive { color: #c084fc; background: rgba(192,132,252,.1); }
+    .role-Manager { color: #f87171; background: rgba(248,113,113,.1); }
+    .role-Administrator { color: #22d3ee; background: rgba(34,211,238,.1); }
+    .role-Moderator { color: #60a5fa; background: rgba(96,165,250,.1); }
 
-    .role-Director { background-color: #FFD700; }
-    .role-Executive { background-color: #B266FF; color: white; }
-    .role-Manager { background-color: #FF4C4C; }
-    .role-Administrator { background-color: #4DD0E1; }
-    .role-Moderator { background-color: #2196F3; color: white; }
+    @media (max-width: 820px) {
+      .layout { grid-template-columns: 1fr; }
+      .form-panel { position: static; }
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
-<body>
+<body class="tool-page">
   <div class="main-container">
-    <h2>Staff List Editor</h2>
+    <h2 class="title">Staff List Editor</h2>
     <div class="layout">
       <div class="form-panel">
         <div class="form-element">
@@ -135,7 +106,7 @@
         </div>
 
         <div class="form-element">
-          <label for="role">Role:</label>
+          <label for="role">Role</label>
           <select id="role">
             <option value="Moderator">Moderator</option>
             <option value="Administrator">Administrator</option>
@@ -147,7 +118,7 @@
 
         <!-- Sort by dropdown -->
         <div class="form-element">
-          <label for="sort">Sort by:</label>
+          <label for="sort">Sort by</label>
           <select id="sort" onchange="sortStaff()">
             <option value="">-- Select --</option>
             <option value="alphabetical">Alphabetical</option>
@@ -199,7 +170,7 @@
         const roleClass = s.role.replace(/\s/g, '');
         row.innerHTML = `
           <td class="drag-handle" title="Drag to reorder">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
               <path d="M2 4h12v1H2V4zm0 3h12v1H2V7zm0 3h12v1H2v-1z"/>
             </svg>
           </td>

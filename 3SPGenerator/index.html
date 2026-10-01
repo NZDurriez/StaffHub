@@ -4,14 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>3SP Template Generator</title>
+  <link rel="stylesheet" href="../theme.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="tool-page">
   <div class="container">
     <h2 class="title">3SP Template Generator</h2>
 
     <div class="form-group">
-      <label>Discord ID:</label>
+      <label>Discord ID</label>
       <input
         type="text"
         id="discordID"
@@ -31,7 +32,7 @@
     </div>
 
     <div class="form-group" id="interactionsGroup">
-      <label>Summary of Staff Interactions:</label>
+      <label>Summary of Staff Interactions</label>
       <textarea
         id="interactions"
         placeholder="Paste interaction history here"
@@ -45,21 +46,21 @@
     </div>
 
     <div class="form-group">
-      <label>Staff Member:</label>
+      <label>Staff Member</label>
       <select id="staffMember">
         <option value="">Loading staff...</option>
       </select>
     </div>
 
     <div class="form-group">
-      <label>Your Role:</label>
+      <label>Your Role</label>
       <select id="staffRole" disabled>
         <option value="">Select a staff member first</option>
       </select>
     </div>
 
     <div class="form-group">
-      <label>Discord Nitro:</label>
+      <label>Discord Nitro</label>
       <select id="discordNitro">
         <option value="yes">I have Discord Nitro</option>
         <option value="no">I do not have Discord Nitro</option>

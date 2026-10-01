@@ -17,8 +17,18 @@
       }
     }, 3000);
   </script>
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    body { min-height: 100vh; display: grid; place-items: center; text-align: center; }
+    .spinner { width: 40px; height: 40px; margin: 0 auto 16px; border-radius: 50%; border: 3px solid var(--line-2); border-top-color: var(--honey); animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    p { color: var(--muted); margin: 0; }
+  </style>
 </head>
 <body>
-  Redirecting to Staff SOP… please wait.
+  <div>
+    <div class="spinner"></div>
+    <p>Redirecting to Staff SOP… please wait.</p>
+  </div>
 </body>
 </html>

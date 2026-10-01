@@ -5,86 +5,90 @@
   <title>Staff Tool Hub</title>
   <link rel="icon" type="image/svg+xml" href="hub-icon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="theme.css" />
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #1e1e1e;
-      color: white;
       height: 100vh;
       display: flex;
       overflow: hidden;
     }
 
+    /* ---------- Sidebar ---------- */
     .sidebar {
-      width: 280px;
-      background-color: #2a2a2a;
-      padding: 30px 20px;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.4);
+      width: 290px;
+      flex: none;
+      background: linear-gradient(180deg, #14171e, #101319);
+      border-right: 1px solid var(--line);
+      padding: 22px 16px;
       display: flex;
       flex-direction: column;
+      gap: 2px;
       overflow-y: auto;
       scrollbar-width: none;
     }
+    .sidebar::-webkit-scrollbar { display: none; }
 
-    .sidebar::-webkit-scrollbar {
-      display: none;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 8px 22px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
     }
+    .brand svg { width: 40px; height: 40px; flex: none; filter: drop-shadow(0 0 14px rgba(245,165,36,.35)); }
+    .brand h1 { margin: 0; font-size: 20px; line-height: 1.1; }
+    .brand small { display: block; color: var(--muted); font: 500 12px var(--font); margin-top: 3px; letter-spacing: .02em; }
 
-    .sidebar h1 {
-      color: orange;
-      margin-bottom: 25px;
-      font-size: 22px;
-    }
-
-    .sidebar h2 {
-      font-size: 16px;
-      color: #ccc;
-      margin: 25px 0 10px;
-      border-top: 1px solid #444;
-      padding-top: 10px;
+    .sidebar h2, .nav-label {
+      font: 600 11px var(--font);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #6b7386;
+      margin: 18px 10px 8px;
+      padding: 0;
+      border: 0;
     }
 
     .link-button {
-      background-color: #444;
-      color: white;
-      padding: 12px 15px;
-      margin: 6px 0;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin: 0;
+      padding: 10px 12px;
+      font: 500 14.5px var(--font);
+      color: #c3c8d4;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      box-shadow: none;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .link-button:hover { background: rgba(255,255,255,.04); color: var(--ink); filter: none; box-shadow: none; }
+    .link-button:active { transform: none; }
+    .link-button.active {
+      color: var(--ink);
+      background: var(--honey-soft);
+      border-color: rgba(245,165,36,.3);
+    }
+    .link-button.active .link-label svg { stroke: var(--honey); }
+
+    .external { color: #9aa1b2; font-size: 14px; }
+
+    .link-label { display: flex; align-items: center; gap: 12px; }
+    .link-label svg { width: 20px; height: 20px; stroke: currentColor; flex: none; transition: stroke .15s; }
+
+    .sidebar-foot {
+      margin-top: auto;
+      padding: 18px 10px 0;
+      color: #5d6577;
+      font-size: 12px;
     }
 
-    .link-button:hover {
-      background-color: #666;
-    }
-
-    .external {
-      background-color: #374151;
-    }
-
-    .external:hover {
-      background-color: #4b5563;
-    }
-
-    .link-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .link-label svg {
-      width: 20px;
-      height: 20px;
-      stroke: white;
-    }
-
+    /* ---------- Content ---------- */
     .iframes {
       flex-grow: 1;
       width: 100%;
@@ -94,77 +98,130 @@
 
     .tool-frame {
       position: absolute;
+      inset: 0;
       border: none;
       width: 100%;
       height: 100%;
       display: none;
+      background: transparent;
+    }
+    .tool-frame.active { display: block; }
+
+    /* Welcome screen, shown until a tool is picked */
+    .welcome {
+      position: absolute;
+      inset: 0;
       overflow: auto;
-      scrollbar-width: none;
+      padding: 56px 48px;
     }
-
-    .tool-frame::-webkit-scrollbar {
-      display: none;
+    .welcome[hidden] { display: none; }
+    .welcome-inner { max-width: 960px; margin: 0 auto; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font: 600 12px var(--font); letter-spacing: .08em; text-transform: uppercase;
+      color: var(--honey);
+      background: var(--honey-soft);
+      border: 1px solid rgba(245,165,36,.3);
+      padding: 5px 12px; border-radius: 999px;
     }
-
-    .tool-frame.active {
-      display: block;
+    .welcome h2 { font-size: clamp(30px, 4vw, 44px); margin: 16px 0 8px; line-height: 1.05; }
+    .welcome p.lead { color: var(--muted); font-size: 16px; margin: 0 0 32px; max-width: 560px; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
     }
+    .card {
+      text-align: left;
+      display: flex; flex-direction: column; gap: 10px;
+      margin: 0;
+      padding: 18px;
+      color: var(--ink);
+      background: linear-gradient(180deg, var(--card-2), var(--card));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: none;
+      font: inherit;
+      transition: border-color .15s, transform .15s, box-shadow .15s;
+    }
+    .card:hover { border-color: rgba(245,165,36,.5); transform: translateY(-2px); filter: none; box-shadow: 0 16px 34px -18px rgba(245,165,36,.45); }
+    .card .ico {
+      width: 40px; height: 40px; display: grid; place-items: center;
+      border-radius: 11px; background: var(--honey-soft); border: 1px solid rgba(245,165,36,.25);
+    }
+    .card .ico svg { width: 22px; height: 22px; stroke: var(--honey); }
+    .card b { font: 700 16px var(--display); }
+    .card span { color: var(--muted); font-size: 13.5px; line-height: 1.45; }
 
+    /* ---------- Refresh button ---------- */
     .refresh-icon-wrapper {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
+      bottom: 22px;
+      right: 22px;
       z-index: 1000;
     }
-
     .refresh-icon {
-      width: 30px;
-      height: 30px;
-      background-color: #28a745;
+      width: 44px;
+      height: 44px;
+      color: #1a1204;
+      background: linear-gradient(180deg, var(--honey-2), var(--honey));
       border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: grid;
+      place-items: center;
       cursor: pointer;
-      transition: transform 0.4s ease;
       position: relative;
+      box-shadow: 0 10px 26px -8px rgba(245,165,36,.8), 0 1px 0 rgba(255,255,255,.35) inset;
+      transition: filter .15s;
     }
-
-    .refresh-icon:hover {
-      background-color: #2ecc71;
-    }
-
+    .refresh-icon svg { width: 22px; height: 22px; stroke-width: 2; }
+    .refresh-icon:hover { filter: brightness(1.08); }
+    .refresh-icon.spin svg { animation: spin .6s ease; }
+    @keyframes spin { to { transform: rotate(360deg); } }
     .refresh-icon::after {
-      content: "Click to Refresh Single Page\AHold to Refresh All Pages";
+      content: "Click to refresh this page\AHold to refresh all pages";
       white-space: pre-line;
       position: absolute;
-      bottom: 40px;
-      right: -20px;
-      background-color: #333;
-      color: #fff;
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 13px;
+      bottom: 54px;
+      right: 0;
+      background: var(--card-2);
+      color: var(--ink);
+      border: 1px solid var(--line-2);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font: 500 12.5px/1.5 var(--font);
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease;
+      transition: opacity .2s ease;
       width: max-content;
-      max-width: 180px;
-      text-align: center;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+      text-align: right;
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
     }
+    .refresh-icon:hover::after { opacity: 1; }
 
-    .refresh-icon:hover::after {
-      opacity: 1;
+    /* ---------- Small screens ---------- */
+    @media (max-width: 820px) {
+      body { flex-direction: column; height: auto; min-height: 100vh; overflow: auto; }
+      .sidebar { width: 100%; border-right: 0; border-bottom: 1px solid var(--line); padding: 14px; }
+      .sidebar-foot { display: none; }
+      .iframes { height: calc(100vh - 60px); min-height: 600px; }
+      .welcome { padding: 28px 16px; }
     }
-
   </style>
 </head>
 <body>
 
   <div class="sidebar">
-    <center></center><h1>Staff Tool Hub</h1></center>
-	
+    <div class="brand" onclick="showHome()" title="Home">
+      <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M24 3 42 13.5v21L24 45 6 34.5v-21L24 3Z" fill="url(#hg)"/>
+        <path d="M24 13.5 33 18.75v10.5L24 34.5l-9-5.25v-10.5L24 13.5Z" fill="#1a1204" opacity=".85"/>
+        <path d="M24 19.5 28 21.8v4.6l-4 2.3-4-2.3v-4.6l4-2.3Z" fill="#ffc35c"/>
+        <defs><linearGradient id="hg" x1="6" y1="3" x2="42" y2="45"><stop stop-color="#ffd27a"/><stop offset="1" stop-color="#f08c00"/></linearGradient></defs>
+      </svg>
+      <div><h1>Staff Tool Hub</h1><small>Beehive RP staff toolkit</small></div>
+    </div>
+
+    <div class="nav-label">Tools</div>
 	<!-- Internal Tools -->
     <button class="link-button" onclick="showTool('tool-evidence')">
       <span class="link-label">
@@ -276,9 +333,20 @@
     Staff SOPs
   	</span> ↗
 	</button>
+
+    <div class="sidebar-foot">Hold the refresh button to reload every tool.</div>
   </div>
 
   <div class="iframes">
+    <section class="welcome" id="welcome">
+      <div class="welcome-inner">
+        <span class="eyebrow">Staff Tool Hub</span>
+        <h2>Kia ora 👋 What are we doing today?</h2>
+        <p class="lead">Pick a tool to get started. Everything you generate is click-to-copy, ready to paste into Discord or TX.</p>
+        <div class="cards" id="cards"></div>
+      </div>
+    </section>
+
     <iframe id="tool-evidence" class="tool-frame" src="https://nzdurriez.github.io/StaffHub/EvidenceGenerator/"></iframe>
     <iframe id="tool-ban" class="tool-frame" src="https://nzdurriez.github.io/StaffHub/BanAppealTemplate/"></iframe>
     <iframe id="tool-3sp" class="tool-frame" src="https://nzdurriez.github.io/StaffHub/3SPGenerator/"></iframe>
@@ -303,7 +371,41 @@
     function showTool(id) {
       document.querySelectorAll('.tool-frame').forEach(el => el.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+      document.getElementById('welcome').hidden = true;
+      document.querySelectorAll('.link-button').forEach(b =>
+        b.classList.toggle('active', (b.getAttribute('onclick') || '').includes(`'${id}'`)));
     }
+
+    function showHome() {
+      document.querySelectorAll('.tool-frame').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.link-button').forEach(b => b.classList.remove('active'));
+      document.getElementById('welcome').hidden = false;
+    }
+
+    // Welcome cards are built from the sidebar buttons so the two never drift apart.
+    const blurbs = {
+      'tool-evidence': 'Build a case write-up with background, evidence and the final result.',
+      'tool-ban': 'Log a ban appeal outcome, plus the 3SP message if it was successful.',
+      'tool-3sp': 'Generate the 3SP notice with a tally of recent kicks, warns and bans.',
+      'tool-3spremoval': 'Let members know they’ve completed 3SP. Manager approval needed.',
+      'tool-civ': 'Accept or deny a CIV+ application and create its log entry.',
+      'tool-punishment': 'Check the punishment guidelines before taking action.',
+      'tool-commands': 'Every in-game and Discord staff command in one place.'
+    };
+    document.querySelectorAll('.link-button:not(.external)').forEach(btn => {
+      const id = (btn.getAttribute('onclick').match(/'([^']+)'/) || [])[1];
+      if (!id) return;
+      const card = document.createElement('button');
+      card.className = 'card';
+      card.onclick = () => showTool(id);
+      const svg = btn.querySelector('svg').cloneNode(true);
+      const name = btn.querySelector('.link-label').textContent.trim();
+      card.innerHTML = `<div class="ico"></div><b></b><span></span>`;
+      card.querySelector('.ico').appendChild(svg);
+      card.querySelector('b').textContent = name;
+      card.querySelector('span').textContent = blurbs[id] || '';
+      document.getElementById('cards').appendChild(card);
+    });
 
     function refreshCurrentFrame(button) {
       const currentFrame = document.querySelector('.tool-frame.active');

@@ -4,131 +4,103 @@
   <meta charset="UTF-8" />
   <title>Civ+ Acceptance Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="icon" href="hub-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="../hub-icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../theme.css" />
   <style>
-    body {
-      background-color: #1e1e1e;
-      color: white;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
+    /* CIV+ layout only; look & feel comes from ../theme.css */
     .main-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 30px;
+      gap: 24px;
       max-width: 1200px;
       margin: auto;
-      padding: 20px;
     }
-    .section {
-      background-color: #2a2a2a;
-      padding: 20px;
-      border-radius: 10px;
-      box-sizing: border-box;
-    }
-    h2 {
-      color: orange;
-      margin-top: 0;
-    }
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 5px;
-    }
-    select, input[type="text"], input[type="date"], textarea, button {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      border: none;
-      background-color: #444;
-      color: white;
-      box-sizing: border-box;
-    }
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      filter: invert(1);
-    }
-    button {
-      background-color: #555;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #666;
-    }
-    .toggle-buttons {
+    .section { padding: 26px; }
+    .section h2 {
       display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      margin: 0 0 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .section h2::before {
+      content: "";
+      width: 10px; height: 24px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--honey-2), var(--honey));
+      box-shadow: 0 0 18px rgba(245,165,36,.45);
+    }
+    label { margin-top: 14px; }
+    .section > input, .section > select { margin-bottom: 2px; }
+
+    /* Accept / Deny segmented toggle */
+    .toggle-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      padding: 4px;
+      background: var(--field);
+      border: 1px solid var(--line-2);
+      border-radius: 13px;
+      margin-bottom: 6px;
     }
     .toggle-buttons button {
-      flex: 1;
-      padding: 12px;
-      font-weight: bold;
-      border-radius: 6px;
+      margin: 0;
+      padding: 10px;
+      color: var(--muted);
+      background: transparent;
+      box-shadow: none;
     }
-    .toggle-buttons .active {
-      color: white;
-    }
+    .toggle-buttons button:hover { color: var(--ink); filter: none; box-shadow: none; }
     #acceptBtn.active {
-      background-color: green;
+      color: #04140a;
+      background: linear-gradient(180deg, #4ade80, var(--ok));
+      box-shadow: 0 6px 18px -8px rgba(34,197,94,.8);
     }
     #denyBtn.active {
-      background-color: red;
+      color: #fff;
+      background: linear-gradient(180deg, #f87171, var(--danger));
+      box-shadow: 0 6px 18px -8px rgba(239,68,68,.8);
     }
-    .textarea-container {
-      position: relative;
-      margin-top: 10px;
-      overflow: hidden;
-    }
-    textarea {
-      background-color: #1e1e1e;
-      color: white;
-      padding: 15px;
-      font-size: 15px;
-      border-radius: 8px;
-      border: 1px solid #444;
-      box-sizing: border-box;
+
+    .section > button { margin-top: 18px; }
+    .textarea-container { position: relative; margin-top: 14px; overflow: hidden; }
+    .textarea-container > button { margin: 18px 0 14px; }
+
+    /* Generated outputs (click to copy) */
+    #output, #logOutput {
+      font: 13.5px/1.6 var(--mono);
+      color: #d7dbe4;
+      cursor: pointer;
+      resize: none;
       white-space: pre-wrap;
-      overflow-y: auto;
-      scrollbar-width: none;
     }
-    textarea::-webkit-scrollbar {
-      display: none;
-    }
-    #output {
-      height: 400px;
-    }
-    #logOutput {
-      height: 200px;
-    }
+    #output:hover, #logOutput:hover { border-color: var(--honey); box-shadow: 0 0 0 3px var(--honey-soft); }
+    #output { height: 400px; }
+    #logOutput { height: 220px; }
+
     .copied-icon {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
-      height: auto;
+      transform: translate(-50%, -50%) rotate(-8deg);
       width: 100%;
       max-width: 200px;
       display: none;
       pointer-events: none;
       z-index: 10;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,.5));
     }
-    .copied-icon.show {
-      display: block;
-    }
+    .copied-icon.show { display: block; animation: stamp .25s cubic-bezier(.2,1.6,.4,1); }
+
     @media (max-width: 900px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
+      .main-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
-<body>
+<body class="tool-page">
   <div class="main-grid">
     <div class="section">
       <h2>CIV+ Accept/Deny Generator</h2>
@@ -137,12 +109,12 @@
         <button id="denyBtn" onclick="setMode('deny')">Deny</button>
       </div>
 
-      <label for="discordId">Discord ID:</label>
+      <label for="discordId">Discord ID</label>
       <input type="text" id="discordId" placeholder="123456789012345678" />
 
-      <!-- <label for="nameSelect">Staff Member:</label>
+      <!-- <label for="nameSelect">Staff Member</label>
       <select id="nameSelect"></select> -->
-      <label for="nameSelect">Staff Member:</label>
+      <label for="nameSelect">Staff Member</label>
       <select id="nameSelect">
       <option value="" disabled selected hidden>-- Select a staff member --</option>
       </select>
@@ -160,28 +132,28 @@
     <div class="section">
       <h2>CIV+ Apps Logging</h2>
 
-      <label for="ingameName">Ingame Name:</label>
+      <label for="ingameName">Ingame Name</label>
       <input type="text" id="ingameName" placeholder="Player's Name" />
 
-      <label for="discordTag">Discord ID:</label>
+      <label for="discordTag">Discord ID</label>
       <input type="text" id="discordTag" readonly />
 
-      <label for="appDate">Date of Application:</label>
+      <label for="appDate">Date of Application</label>
       <input type="date" id="appDate" />
 
-      <label for="ticketId">Ticket ID:</label>
+      <label for="ticketId">Ticket ID</label>
       <input type="text" id="ticketId" placeholder="e.g. 22489" />
 
-      <label for="outcome">Outcome:</label>
+      <label for="outcome">Outcome</label>
       <input type="text" id="outcome" readonly />
 
-      <label for="staffMember">Staff Member:</label>
+      <label for="staffMember">Staff Member</label>
       <input type="text" id="staffMember" readonly />
 
-      <label for="notes">Notes:</label>
+      <label for="notes">Notes</label>
       <textarea id="notes" rows="2" placeholder="Optional notes..."></textarea>
 
-      <label for="loggedTx">Logged in TX if successful:</label>
+      <label for="loggedTx">Logged in TX if successful</label>
       <select id="loggedTx">
         <option value="">Select...</option>
         <option value="Yes">Yes</option>

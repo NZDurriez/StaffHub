@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Evidence Generator</title>
+  <link rel="stylesheet" href="../theme.css">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="tool-page">
   <div class="container">
     <h2 class="title">Evidence Generator</h2>
 
@@ -14,12 +15,12 @@
       <!-- LEFT: Form -->
       <div class="form-container">
         <div class="form-group">
-          <label for="case">Case:</label>
+          <label for="case">Case</label>
           <input type="text" id="case">
         </div>
 
         <div class="form-group">
-          <label for="platform">Platform:</label>
+          <label for="platform">Platform</label>
           <select id="platform">
             <option value="FPD">FPD</option>
             <option value="Discord">Discord</option>
@@ -27,38 +28,41 @@
         </div>
 
         <div class="form-group">
-          <label for="discord">Discord ID:</label>
+          <label for="discord">Discord ID</label>
           <input type="text" id="discord" placeholder="Enter ID (Numbers Only)">
         </div>
 
         <div class="form-group">
-          <label for="background">Background:</label>
+          <label for="background">Background</label>
           <textarea id="background"></textarea>
         </div>
 
         <div class="form-group">
-          <label for="evidence">Evidence:</label>
+          <label for="evidence">Evidence</label>
           <textarea id="evidence"></textarea>
         </div>
 
         <div class="form-group">
-          <label for="finalRes">Final Res:</label>
+          <label for="finalRes">Final Res</label>
           <textarea id="finalRes"></textarea>
         </div>
 
         <div class="form-group">
-          <label for="idType">ID Type:</label>
-          <select id="idType">
-            <option value="Ban ID">Ban ID</option>
-            <option value="Warn ID">Warn ID</option>
-            <option value="Kick ID">Kick ID</option>
-          </select>
-          <input type="text" id="idValue" placeholder="Enter ID">
+          <label for="idType">ID Type</label>
+          <div class="id-row">
+            <select id="idType">
+              <option value="Ban ID">Ban ID</option>
+              <option value="Warn ID">Warn ID</option>
+              <option value="Kick ID">Kick ID</option>
+            </select>
+            <input type="text" id="idValue" placeholder="Enter ID">
+          </div>
         </div>
       </div>
 
       <!-- RIGHT: Output -->
       <div class="output-container">
+        <label>Output</label>
         <div id="output" class="output-box" data-tooltip="Click to copy"></div>
       </div>
     </div>

@@ -1,147 +1,80 @@
-/* style.css */
-
-/* Global box-sizing */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
+/* 3SP Template Generator — layout only; look & feel comes from ../theme.css */
 body {
-  background: #1e1e1e;
-  color: white;
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
   min-height: 100vh;
 }
 
 .container {
-  max-width: 750px;
+  max-width: 780px;
   width: 100%;
-  background: #333;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  text-align: center;
-  margin-top: 20px;
+  padding: 28px;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  padding: 5px;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #aaa;
-  background: #555;
-  color: white;
-  border-radius: 5px;
-  margin-top: 5px;
-}
-
+/* Kicks / Warns / Bans counters */
 .tally-box {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 10px 0;
-  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 0 0 18px;
 }
 
 .tally-item {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  font-weight: bold;
-  text-align: center;
-  margin: 5px;
-}
-
-.tally-warn { background-color: #FFC107; }
-.tally-kick { background-color: #FFA500; }
-.tally-ban  { background-color: #DC3545; }
-
-button {
-  width: 100%;
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 5px;
-  margin-top: 10px;
-  font-size: 1em;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #0056b3;
-}
-
-#boxCount {
-  display: none;
-  margin: 10px auto;
-  background: #28a745;
-  color: #ffffff;
-  padding: 6px 10px;
-  border-radius: 4px;
-  font-weight: bold;
-  width: fit-content;
-}
-
-.output {
-  text-align: left;
-  white-space: pre-wrap;
-  margin-top: 10px;
-}
-
-.output-box {
+  flex: 1; /* the script switches the box to display:flex */
   position: relative;
-  background: #444;
-  border: 1px solid #666;
-  padding: 10px;
-  margin-top: 10px;
-  cursor: pointer;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  text-align: left;
+  background: var(--field);
+  border: 1px solid var(--line-2);
+  overflow: hidden;
 }
+.tally-item span {
+  display: block;
+  font: 800 28px/1.1 var(--display);
+  letter-spacing: 0;
+  margin-top: 4px;
+  color: var(--ink);
+}
+.tally-item::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+}
+.tally-kick { color: var(--kick); }
+.tally-kick::before { background: var(--kick); }
+.tally-warn { color: var(--warn); }
+.tally-warn::before { background: var(--warn); }
+.tally-ban { color: var(--danger); }
+.tally-ban::before { background: var(--danger); }
+
+#boxCount { display: none; }
+
+.output { margin: 0; white-space: pre-wrap; text-align: left; }
 
 .part-number {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  background: #28a745;
-  color: #ffffff;
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 0.75em;
+  top: 10px;
+  left: 10px;
+  min-width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  background: var(--honey);
+  color: #1a1204;
+  border-radius: 7px;
+  font: 800 12px var(--font);
 }
+.output-box:has(.part-number) { padding-top: 44px; }
 
-/* Image stamp overlay */
-.copy-stamp {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
+.tooltip { display: none; }
 
-/* Tooltip */
-.tooltip {
-  position: absolute;
-  background: #FFD700;
-  color: #000;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.8em;
-  pointer-events: none;
-  white-space: nowrap;
-  display: none;
-  z-index: 1000;
+@media (max-width: 520px) {
+  .tally-item span { font-size: 22px; }
 }

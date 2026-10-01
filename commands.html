@@ -4,60 +4,84 @@
   <meta charset="UTF-8" />
   <title>Ingame & Discord Commands</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="theme.css" />
   <style>
-    body {
-      background-color: #1e1e1e;
-      color: white;
-      font-family: Arial, sans-serif;
-      padding: 40px;
-      margin: 0;
-    }
+    /* Commands layout only; look & feel comes from theme.css */
+    .page { max-width: 960px; margin: 0 auto; }
 
-    h1 {
-      color: orange;
-      text-align: center;
-      margin-bottom: 30px;
-    }
+    h1.title { font-size: 26px; }
 
     details {
-      background-color: #2a2a2a;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      padding: 20px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+      background: linear-gradient(180deg, var(--card-2), var(--card));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px -24px rgba(0,0,0,.6);
     }
 
     summary {
-      font-size: 18px;
-      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      list-style: none;
       cursor: pointer;
-      outline: none;
-      color: #ffa500;
-      margin-bottom: 10px;
+      padding: 18px 22px;
+      font: 700 18px var(--display);
+      color: var(--ink);
+      user-select: none;
     }
-
-    code {
-      background-color: #333;
-      padding: 3px 6px;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 14px;
-      color: #00e0ff;
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: "";
+      margin-left: auto;
+      width: 10px; height: 10px;
+      border-right: 2px solid var(--muted);
+      border-bottom: 2px solid var(--muted);
+      transform: rotate(45deg);
+      transition: transform .2s;
     }
+    details[open] summary::after { transform: rotate(-135deg); }
+    summary:hover { background: rgba(255,255,255,.02); }
+    details[open] summary { border-bottom: 1px solid var(--line); }
 
     ul {
-      margin-top: 10px;
-      padding-left: 20px;
+      list-style: none;
+      margin: 0;
+      padding: 8px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 4px;
     }
 
     li {
-      margin-bottom: 8px;
-      line-height: 1.6;
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    li:hover { background: rgba(255,255,255,.03); color: var(--ink); }
+
+    code {
+      display: inline-block;
+      margin: 0 4px 2px 0;
+      font: 500 13.5px var(--mono);
+      color: var(--honey-2);
+      background: var(--honey-soft);
+      border: 1px solid rgba(245,165,36,.25);
+      padding: 3px 8px;
+      border-radius: 7px;
+    }
+
+    @media (max-width: 520px) {
+      ul { grid-template-columns: 1fr; }
     }
   </style>
 </head>
-<body>
-  <h1>Ingame & Discord Staff Commands</h1>
+<body class="tool-page">
+  <div class="page">
+  <h1 class="title">Ingame & Discord Staff Commands</h1>
 
   <details>
     <summary>🎮 Ingame Staff Commands</summary>
@@ -106,6 +130,7 @@
       <li><code>/mute</code> - Timeout a user for a set duration</li>
     </ul>
   </details>
+  </div>
 
 </body>
 </html>

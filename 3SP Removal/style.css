@@ -1,145 +1,61 @@
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
+/* 3SP Removal Generator — layout only; look & feel comes from ../theme.css */
 body {
-  background: #1e1e1e;
-  color: white;
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   min-height: 100vh;
 }
 
 .container {
-  max-width: 750px;
+  max-width: 780px;
   width: 100%;
-  background: #333;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  margin-top: 20px;
+  padding: 28px;
 }
 
-.title {
+/* Authorization gate */
+#authGate {
+  max-width: 520px;
+  margin-top: 8vh;
   text-align: center;
-  margin-bottom: 15px;
 }
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  padding: 5px 0;
+#authGate .title { justify-content: center; border-bottom: 0; padding-bottom: 0; margin-bottom: 10px; }
+#authGate .title::before { display: none; }
+#authGate::before {
+  content: "🔒";
+  display: grid;
+  place-items: center;
+  width: 64px; height: 64px;
+  margin: 0 auto 14px;
+  font-size: 28px;
+  border-radius: 18px;
+  background: var(--honey-soft);
+  border: 1px solid rgba(245,165,36,.35);
 }
+#authGate p { color: var(--muted); }
 
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #aaa;
-  background: #555;
-  color: white;
-  border-radius: 5px;
-  margin-top: 5px;
-}
-
-input[disabled],
-select[disabled],
-textarea[disabled] {
-  background: #444;
-  color: #999;
-  cursor: not-allowed;
-}
-
-button {
-  width: 100%;
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 5px;
-  margin-top: 10px;
-  font-size: 1em;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #0056b3;
-}
-
-/* Authorization buttons */
 .auth-buttons {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
-}
-
-.auth-buttons button {
-  flex: 1;
+  margin-top: 8px;
 }
 
 .btn-yes {
-  background: #28a745;
+  color: #04140a;
+  background: linear-gradient(180deg, #4ade80, var(--ok));
+  box-shadow: 0 8px 22px -10px rgba(34,197,94,.8), 0 1px 0 rgba(255,255,255,.35) inset;
 }
-
-.btn-yes:hover {
-  background: #1e7e34;
-}
-
 .btn-no {
-  background: #dc3545;
-}
-
-.btn-no:hover {
-  background: #a71d2a;
-}
-
-/* Output Box (Tightened) */
-.output-box {
-  position: relative;
-  background: #444;
-  border: 1px solid #666;
-  padding: 8px 10px;
-  margin-top: 12px;
-  cursor: pointer;
-  white-space: pre-wrap;
-  overflow: hidden;
-  line-height: 1.35;
-  font-size: 0.95em;
-}
-
-.output-box:hover {
-  border-color: #28a745;
-}
-
-.output-box p {
-  margin: 0;
-}
-
-/* Copied stamp */
-.copy-stamp {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  opacity: 0.8;
-  max-width: 55%;
-  max-height: 55%;
-}
-
-/* Tooltip */
-.tooltip {
-  position: absolute;
-  background: rgba(0,0,0,0.85);
   color: #fff;
-  padding: 3px 6px;
-  border-radius: 4px;
-  font-size: 0.7em;
-  pointer-events: none;
+  background: linear-gradient(180deg, #f87171, var(--danger));
+  box-shadow: 0 8px 22px -10px rgba(239,68,68,.8), 0 1px 0 rgba(255,255,255,.25) inset;
+}
+.btn-yes:hover, .btn-no:hover { filter: brightness(1.08); }
+
+#discordIDs { font-family: var(--mono); font-size: 14px; min-height: 120px; }
+
+/* Tooltip lives inside the output box here */
+.tooltip {
   opacity: 0;
-  transition: opacity 0.12s ease-in-out;
-  z-index: 9999;
+  transition: opacity .12s ease-in-out;
 }
